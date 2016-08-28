@@ -1,16 +1,24 @@
-# OpenUnison S2I Basic Quickstart
+# OpenUnison FreeIPA Quickstart
 
-This quickstart will create simple OpenUnison deployment that will authenticate
-a static user defined using environment variables.  Its meant to be a starting
-point for learning how to build and deploy OpenUnison.
+This quickstart will deploy an OpenUnison integration with FreeIPA.  Once deployed,
+a user will be able to:
+1. Register
+2. Request access to groups managed by FreeIPA
+3. Update their own profile and upload an SSH key
+4. Use a self service password reset if they forget their password
+
+In addition to the keystore created in the instructions from https://hub.docker.com/r/tremolosecurity/openunisons2idocker/ the FreeIPA root certificate
+should be added to the keystore.  
 
 ## Environment Variables
 
 | Variable | Description | Example |
 | -------- | ----------- | ------- |
 | OU_HOST | The host name users will use to access the site | myapp.mycompany.lan |
-| TEST_USER_NAME | The name of the test user | testuser |
-| TEST_USER_PASSWORD | The password for the test user | secret |
+| FREEIPA_BASE | The root DN of the FreeIPA Server | dc=rheldemo,dc=lan |
+| FREEIPA_HOST | The host name of the FreeIPA Server | ipa.rheldemo.lan |
+| FREEIPA_BIND_USER | A DN with read access to the 389 backing FreeIPA | uid=someuser,cn=users,cn=accounts,dc=rheldemo,dc=lan |
+| FREEIPA_BIND_PASSWORD | The password for the read access service account | somesecret |
 | JAVA_OPTS | List of Java system properties, MUST include unisonKeystorePassword | -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -DunisonKeystorePassword=start123 |
 
 ## Use
@@ -18,6 +26,5 @@ point for learning how to build and deploy OpenUnison.
 Once deployed, access this site by navigating to https://OU_HOST/ replacing
 OU_HOST with the value of the OU_HOST environment variable.  For instance, if
 OU_HOST is myapp.mycompany.lan use https://myapp.mycompany.lan/.  Once prompoted
-for a username and password, use the values specified for TEST_USER_NAME and
-TEST_USER_PASSWORD respectively.  Once logged in, a page showing all headers,
+for a username and password, use a uid and password from FreeIPA.  Once logged in, a page showing all headers,
 request and session variables is shown.
