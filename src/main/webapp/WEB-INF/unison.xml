@@ -319,6 +319,10 @@
               <mapping targetAttributeName="mail" sourceType="user" targetAttributeSource="mail"/>
             </map>
             <onSuccess>
+              <customTask className="com.tremolosecurity.provisioning.customTasks.LoadGroups">
+                <param name="nameAttr" value="uid"/>
+                <param name="inverse" value="false"/>
+              </customTask>
               <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="false" />
               <notifyUser subject="Your profile has been updated" mailAttrib="mail">
                 <msg>
