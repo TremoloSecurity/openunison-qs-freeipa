@@ -326,6 +326,7 @@
   </msg>
               </notifyUser>
             </onSuccess>
+          </mapping>
           </tasks>
         </workflow>
       </workflows>
