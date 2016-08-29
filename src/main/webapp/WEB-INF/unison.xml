@@ -11,6 +11,7 @@
           <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
           <filterChain>
             <filter class="com.tremolosecurity.prelude.filters.StopProcessing" />
+          </filterChain>
           <!-- The URI (aka path) of this URL -->
           <uri>/</uri>
 
@@ -332,7 +333,7 @@
       <queueConfig isUseInternalQueue="true" maxProducers="5"  maxConsumers="5" taskQueueName="TremoloUnisonTaskQueue" smtpQueueName="TremoloUnisonSMTPQueue" encryptionKeyName="session-unison">
       </queueConfig>
       <portal>
-        
+
       </portal>
       <scheduler useDB="false" threadCount="3" instanceLabel="testing" instanceIPMask="127"/>
       <listeners/>
