@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tremoloConfig xmlns="http://www.tremolosecurity.com/tremoloConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tremolosecurity.com/tremoloConfig tremoloConfig.xsd">
+<tremoloConfig xmlns="http://www.tremolosecurity.com/tremoloConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tremolosecurity.com/tremoloConfig tremoloConfig.xsd" ldapRoot="o=Tremolo" groupObjectClass="groupOfNames" groupMemberAttribute="member" userObjectClass="inetOrgPerson">
   <applications openSessionCookieName="openSession" openSessionTimeout="9000">
     <application name="ScaleJS" azTimeoutMillis="30000" >
       <urls>
