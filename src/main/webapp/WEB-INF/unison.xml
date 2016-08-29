@@ -312,7 +312,7 @@
                 <!-- SMTP Host -->
                 <param name="smtpHost" value="#[SMTP_HOST]"/>
                 <!-- SMTP port -->
-                <param name="smtpPort" value="$[SMTP_PASSWORD]"/>
+                <param name="smtpPort" value="#[SMTP_PORT]"/>
                 <!-- SMTP user -->
                 <param name="smtpUser" value="#[SMTP_USER]"/>
                 <!-- SMTP Password -->
