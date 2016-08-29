@@ -235,7 +235,7 @@
             <rule scope="dn" constraint="o=Tremolo" />
           </azRules>
         </url>
-        <url regex="false" authChain="resetPassword" overrideHost="true" overrideReferer="true">
+        <url regex="false" authChain="anon" overrideHost="true" overrideReferer="true">
           <host>#[OU_HOST]</host>
           <filterChain>
             <filter class="com.tremolosecurity.scalejs.register.ws.ScaleRegister">
