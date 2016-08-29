@@ -462,12 +462,15 @@
             <mapping  strict="true">
               <map>
                 <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
-                <mapping targetAttributeName="mail" sourceType="user" targetAttributeSource="mail"/>
               </map>
               <onSuccess>
                 <customTask className="com.tremolosecurity.provisioning.customTasks.LoadGroups">
                   <param name="nameAttr" value="uid"/>
                   <param name="inverse" value="false"/>
+                </customTask>
+                <customTask className="com.tremolosecurity.provisioning.customTasks.LoadAttributes">
+                  <param name="name" value="mail"/>
+                  <param name="nameAttr" value="uid"/>
                 </customTask>
                 <provision sync="true" target="freeipa" setPassword="true" onlyPassedInAttributes="true" >
                   <attributes>
