@@ -225,7 +225,7 @@
               <param name="attributeName" value="trimmedURI"/>
             </filter>
           </filterChain>
-          <uri>/scale-reset</uri>
+          <uri>/scale-register</uri>
           <proxyTo>https://cdn.rawgit.com/TremoloSecurity/OpenUnison/1.0.7/unison/unison-scalejs-register/src/main/html${trimmedURI}</proxyTo>
           <results>
             <azSuccess>
