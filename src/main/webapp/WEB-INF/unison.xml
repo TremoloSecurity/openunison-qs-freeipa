@@ -152,6 +152,70 @@
             <rule scope="dn" constraint="o=Tremolo" />
           </azRules>
         </url>
+        <url regex="false" authChain="resetPassword" overrideHost="true" overrideReferer="true">
+          <host>#[OU_HOST]</host>
+          <filterChain>
+            <filter class="com.tremolosecurity.proxy.filters.RemovePrefix">
+              <param name="prefix" value="/scale-reset"/>
+              <param name="attributeName" value="trimmedURI"/>
+            </filter>
+          </filterChain>
+          <uri>/scale-reset</uri>
+          <proxyTo>https://cdn.rawgit.com/TremoloSecurity/OpenUnison/1.0.7/unison/unison-scalejs-password/src/main/html${trimmedURI}</proxyTo>
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+        <url regex="false" authChain="resetPassword" overrideHost="true" overrideReferer="true">
+          <host>#[OU_HOST]</host>
+          <filterChain>
+            <filter class="com.tremolosecurity.scalejs.password.ws.ScalePassword">
+  <!-- The name of the attribute that stores the value to be displayed when referencing the currently logged in user, ie cn or displayName -->
+  <param name="displayNameAttribute" value="displayName"/>
+  <!-- The title to show on the home page -->
+  <param name="frontPage.title" value="FreeIPA Password Reset"/>
+  <!-- Sub text for the home page -->
+  <param name="frontPage.text" value="Please enter your new password.  Your password must have an upper case, lower case, numeric and special character.  The password must be at least 8 characters long and not longer then 20.  Also, 3 consecutive characters from your first name, last name or user id can not appear in it."/>
+  <!-- The URL to access ScaleMain -->
+  <param name="homeURL" value="/scale/index.html"/>
+  <!-- The URL to redirect the user to when they logout -->
+  <param name="logoutURL" value="/logout"/>
+  <!-- The name of the attribute that identifies the user uniquely -->
+  <param name="uidAttributeName" value="uid"/>
+  <!-- Reason for the workflow -->
+  <param name="reason" value="Password reset"/>
+  <!-- Workflow for the password reset call -->
+  <param name="workflowName" value="ipa-password-self-reset"/>
+  <!-- Implementation of com.tremolosecurity.scalejs.password.sdk.PasswordValidator -->
+  <param name="validatorClassName" value="com.tremolosecurity.scalejs.password.validators.ActiveDirectoryValidator"/>
+
+  <!-- List of parameters for the validator -->
+  <param name="validator.params" value="requireLower=true"/>
+  <param name="validator.params" value="requireUpper=true"/>
+  <param name="validator.params" value="requireNumber=true"/>
+  <param name="validator.params" value="requireSpecial=true"/>
+  <param name="validator.params" value="minRequirements=4"/>
+  <param name="validator.params" value="maxChars=20"/>
+  <param name="validator.params" value="minChars=8"/>
+  <param name="validator.params" value="attributesToCheck=Last Name=sn"/>
+  <param name="validator.params" value="attributesToCheck=User Name=uid"/>
+  <param name="validator.params" value="attributesToCheck=First Name=givenName"/>
+</filter>
+          </filterChain>
+          <uri>/scale-reset/password</uri>
+
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
       </urls>
       <!-- The cookie configuration determines how sessions are managed for this application -->
       <cookieConfig>
@@ -225,6 +289,51 @@
       <params>
       </params>
     </mechanism>
+    <mechanism name="passwordReset">
+        <uri>/auth/passwdReset</uri>
+        <className>com.tremolosecurity.proxy.auth.PasswordReset</className>
+        <init>
+            <!-- Database driver -->
+                <param name="driver" value="#[OU_JDBC_DRIVER]"/>
+                <!-- JDBC URL -->
+                <param name="url" value="#[OU_JDBC_PWD_URL]"/>
+                <!-- DB User -->
+                <param name="user" value="#[OU_JDBC_USER]"/>
+                <!-- DB Password -->
+                <param name="password" value="#[OU_JDBC_PASSWORD]"/>
+                <!-- Maximum number of connections -->
+                <param name="maxCons" value="10"/>
+                <!-- Maximum number of connections not actively working -->
+                <param name="maxIdleCons" value="10"/>
+                <!-- The URI to redirect users to after being authenticated if the user's session is over -->
+                <param name="passwordResetURI" value="/scale-reset/index.html"/>
+                <!-- The number of minutes a key is valid -->
+                <param name="minValidKey" value="20"/>
+                <!-- SMTP Host -->
+                <param name="smtpHost" value="#[SMTP_HOST]"/>
+                <!-- SMTP port -->
+                <param name="smtpPort" value="$[SMTP_PASSWORD]"/>
+                <!-- SMTP user -->
+                <param name="smtpUser" value="#[SMTP_USER]"/>
+                <!-- SMTP Password -->
+                <param name="smtpPassword" value="#[SMTP_PASSWORD]"/>
+                <!-- Email with key subject line -->
+                <param name="smtpSubject" value="Password Reset"/>
+                <!-- Message for the password reset, ${key} for the user's key -->
+                <param name="smtpMsg" value="Click to reset: https://#[OU_HOST]/auth/pwdRest?${key}"/>
+                <!-- The email address for the "From" -->
+                <param name="smtpFrom" value="#[SMTP_FROM]"/>
+                <!-- Set to true if using TLS -->
+                <param name="smtpTLS" value="#[SMTP_TLS]"/>
+                <!-- Set to true to enable this mechanism -->
+                <param name="enabled" value="true"/>
+                <!-- The HibernateSQL dialect -->
+                <param name="dialect" value="#[OU_HIBERNATE_DIALECT]"/>
+                <!-- Validation query to make sure the connection is still available -->
+                <param name="validationQuery" value="#[OU_JDBC_VALIDATION]"/>
+        </init>
+        <params></params>
+</mechanism>
   </authMechs>
   <authChains>
     <!-- An anonymous authentication chain MUST be level 0 -->
@@ -236,7 +345,7 @@
         </params>
       </authMech>
     </chain>
-    <chain name="loginForm" level="1">
+    <chain name="loginForm" level="20">
       <authMech>
         <name>loginForm</name>
         <required>required</required>
@@ -250,6 +359,21 @@
         </params>
       </authMech>
     </chain>
+
+    <chain name="resetPassword" level="5">
+        <authMech>
+                <name>passwordReset</name>
+                <required>required</required>
+                <params>
+                        <!-- The page to collect the user's email address -->
+                        <param name="emailCollectionRedir" value="/auth/forms/pwdResetEmail.jsp"/>
+                        <!-- The splash screen telling the user a reset message has been sent -->
+                        <param name="splashRedirect" value="/auth/forms/pwdResetSplash.jsp"/>
+                        <!-- Page to show the user when an email address can't be found -->
+                        <param name="noUserSplash" value="/auth/forms/pwdResetNoUser.jsp"/>
+                </params>
+        </authMech>
+</chain>
   </authChains>
   <resultGroups>
     <!-- The name attribute is how the resultGroup is referenced in the URL -->
@@ -333,6 +457,32 @@
           </mapping>
           </tasks>
         </workflow>
+        <workflow  name="ipa-password-self-reset" label="FreeIPA User Self Service Password Update" description="Password self service update from ScaleJS" inList="false" orgid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
+          <tasks>
+            <mapping  strict="true">
+              <map>
+                <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+                <mapping targetAttributeName="mail" sourceType="user" targetAttributeSource="mail"/>
+              </map>
+              <onSuccess>
+                <customTask className="com.tremolosecurity.provisioning.customTasks.LoadGroups">
+                  <param name="nameAttr" value="uid"/>
+                  <param name="inverse" value="false"/>
+                </customTask>
+                <provision sync="true" target="freeipa" setPassword="true" onlyPassedInAttributes="true" >
+                  <attributes>
+                    <value>uid</value>
+                  </attributes>
+                </provision>
+                <notifyUser subject="Your password has been updated" mailAttrib="mail">
+                  <msg>
+      Your profile has been updated.  If you didn't update your password, please contact support immediately.
+    </msg>
+                </notifyUser>
+              </onSuccess>
+            </mapping>
+            </tasks>
+          </workflow>
       </workflows>
       <approvalDB>
         <hibernateDialect>#[OU_HIBERNATE_DIALECT]</hibernateDialect>
