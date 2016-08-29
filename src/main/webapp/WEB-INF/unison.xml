@@ -320,7 +320,7 @@
                 <!-- Email with key subject line -->
                 <param name="smtpSubject" value="Password Reset"/>
                 <!-- Message for the password reset, ${key} for the user's key -->
-                <param name="smtpMsg" value="Click to reset: https://#[OU_HOST]/auth/pwdRest?${key}"/>
+                <param name="smtpMsg" value="Click to reset: https://#[OU_HOST]/auth/passwdReset?${key}"/>
                 <!-- The email address for the "From" -->
                 <param name="smtpFrom" value="#[SMTP_FROM]"/>
                 <!-- Set to true if using TLS -->
