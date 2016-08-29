@@ -14,10 +14,8 @@
           </filterChain>
           <!-- The URI (aka path) of this URL -->
           <uri>/</uri>
-
           <!-- List the various results that should happen -->
           <results>
-
             <auFail>noauaz</auFail>
             <azSuccess>scaleRedirect</azSuccess>
             <azFail>noauaz</azFail>
@@ -90,7 +88,7 @@
               <!-- Determines if a user can be edited -->
               <param name="canEditUser" value="true"/>
               <!-- The name of the workflow to run when a user submits an update request -->
-              <param name="workflowName" value="freeipa-update-user"/>
+              <param name="workflowName" value="ipa-user-update"/>
               <!-- When the below number of minutes are left in the user's session, warn the user -->
               <param name="warnMinutesLeft" value="5" />
               <!-- For each attribute, define an attributeNames, displayName, readOnly -->
@@ -100,6 +98,27 @@
               <param name="attributeNames" value="displayName"/>
               <param name="displayName.displayName" value="Display Name"/>
               <param name="displayName.readOnly" value="false"/>
+              <param name="displayName.required" value="true"/>
+              <param name="attributeNames" value="givenName"/>
+              <param name="givenName.displayName" value="First Name"/>
+              <param name="givenName.readOnly" value="false"/>
+              <param name="givenName.required" value="true"/>
+              <param name="attributeNames" value="sn"/>
+              <param name="sn.displayName" value="Last Name"/>
+              <param name="sn.readOnly" value="false"/>
+              <param name="sn.required" value="true"/>
+              <param name="attributeNames" value="mail"/>
+              <param name="mail.displayName" value="Email Address"/>
+              <param name="mail.readOnly" value="false"/>
+              <param name="mail.required" value="true"/>
+              <param name="attributeNames" value="loginShell"/>
+              <param name="loginShell.displayName" value="Lofin Shell"/>
+              <param name="loginShell.readOnly" value="false"/>
+              <param name="loginShell.required" value="true"/>
+              <param name="attributeNames" value="ipaSshPubKey"/>
+              <param name="ipaSshPubKey.displayName" value="SSH Public Key"/>
+              <param name="ipaSshPubKey.readOnly" value="false"/>
+              <param name="ipaSshPubKey.required" value="true"/>
               <!-- The name of the attribute that identifies the user uniquely -->
               <param name="uidAttributeName" value="uid"/>
               <!-- An attribute that specifies which roles a user is a member of.  If left blank, then the user's DN in the virtual directory is compared against memberOf attributes -->
@@ -110,7 +129,6 @@
               <param name="approvalAttributeNames" value="sn"/>
               <param name="approvalAttributeNames" value="mail"/>
               <param name="approvalAttributeNames" value="displayName"/>
-
               <!-- Labels for each of the attributes -->
               <param name="approvals.uid" value="Login ID"/>
               <param name="approvals.givenName" value="First Name"/>
@@ -246,7 +264,7 @@
         <value>/auth/forms/logout.jsp</value>
       </result>
     </resultGroup>
-      <resultGroup name="noauaz">
+    <resultGroup name="noauaz">
       <result>
         <type>redirect</type>
         <source>static</source>
@@ -254,13 +272,12 @@
       </result>
     </resultGroup>
     <resultGroup name="scaleRedirect">
-    <result>
-      <type>redirect</type>
-      <source>static</source>
-      <value>/scale/index.html</value>
-    </result>
-  </resultGroup>
-
+      <result>
+        <type>redirect</type>
+        <source>static</source>
+        <value>/scale/index.html</value>
+      </result>
+    </resultGroup>
   </resultGroups>
   <keyStorePath>/etc/openunison/unisonKeyStore.jks</keyStorePath>
   <keyStorePassword>#[unisonKeystorePassword]</keyStorePassword>
@@ -283,11 +300,34 @@
         <targetAttribute name="mail" source="mail" sourceType="user"/>
         <targetAttribute name="displayname" source="displayname" sourceType="user"/>
         <targetAttribute name="gecos" source="gecos" sourceType="user"/>
-
+        <targetAttribute name="loginshell" source="loginshell" sourceType="user"/>
+        <targetAttribute name="ipasshpubkey" source="ipasshpubkey" sourceType="user"/>
       </target>
     </targets>
     <workflows>
-
+      <workflow  name="ipa-user-update" label="FreeIPA User Self Update" description="User self update from ScaleJS" inList="false" orgid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
+        <tasks>
+          <mapping  strict="true">
+            <map>
+              <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+              <mapping targetAttributeName="givenname" sourceType="user" targetAttributeSource="givenName"/>
+              <mapping targetAttributeName="sn" sourceType="user" targetAttributeSource="sn"/>
+              <mapping targetAttributeName="displayname" sourceType="user" targetAttributeSource="displayName"/>
+              <mapping targetAttributeName="gecos" sourceType="user" targetAttributeSource="displayName"/>
+              <mapping targetAttributeName="ipasshpubkey" sourceType="user" targetAttributeSource="ipaSshPubKey"/>
+              <mapping targetAttributeName="loginshell" sourceType="user" targetAttributeSource="loginShell"/>
+              <mapping targetAttributeName="mail" sourceType="user" targetAttributeSource="mail"/>
+            </map>
+            <onSuccess>
+              <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="false" />
+              <notifyUser subject="Your profile has been updated" mailAttrib="mail">
+                <msg>
+    Your profile has been updated.  If you didn't update your profile, please contact support immediately.
+  </msg>
+              </notifyUser>
+            </onSuccess>
+          </tasks>
+        </workflow>
       </workflows>
       <approvalDB>
         <hibernateDialect>#[OU_HIBERNATE_DIALECT]</hibernateDialect>
@@ -333,11 +373,10 @@
       <queueConfig isUseInternalQueue="true" maxProducers="5"  maxConsumers="5" taskQueueName="TremoloUnisonTaskQueue" smtpQueueName="TremoloUnisonSMTPQueue" encryptionKeyName="session-unison">
       </queueConfig>
       <portal>
-
       </portal>
       <scheduler useDB="false" threadCount="3" instanceLabel="testing" instanceIPMask="127"/>
       <listeners/>
       <reports>
       </reports>
     </provisioning>
-  </tremoloConfig>
+    </tremoloConfig>
