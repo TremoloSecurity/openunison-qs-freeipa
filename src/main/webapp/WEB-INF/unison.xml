@@ -216,6 +216,132 @@
             <rule scope="dn" constraint="o=Tremolo" />
           </azRules>
         </url>
+
+        <url regex="false" authChain="anon" overrideHost="true" overrideReferer="true">
+          <host>#[OU_HOST]</host>
+          <filterChain>
+            <filter class="com.tremolosecurity.proxy.filters.RemovePrefix">
+              <param name="prefix" value="/scale-register"/>
+              <param name="attributeName" value="trimmedURI"/>
+            </filter>
+          </filterChain>
+          <uri>/scale-reset</uri>
+          <proxyTo>https://cdn.rawgit.com/TremoloSecurity/OpenUnison/1.0.7/unison/unison-scalejs-register/src/main/html${trimmedURI}</proxyTo>
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+        <url regex="false" authChain="resetPassword" overrideHost="true" overrideReferer="true">
+          <host>#[OU_HOST]</host>
+          <filterChain>
+            <filter class="com.tremolosecurity.scalejs.register.ws.ScaleRegister">
+          <!-- The name of the attribute that stores the value to be displayed when referencing the currently logged in user, ie cn or displayName -->
+    <param name="displayNameAttribute" value=""/>
+    <!-- The name of the attribute that identifies the user uniquely -->
+    <param name="uidAttributeName" value="uid"/>
+    <!-- If a custom submission class isn't used, the workflow to execute -->
+    <param name="workflowName" value="ipa-user-selfregistration"/>
+    <!-- The URL to redirect the user to when they logout -->
+    <param name="logoutURL" value="/logout"/>
+    <!-- The title to show on the home page -->
+    <param name="frontPage.title" value="Register an account in FreeIPA"/>
+    <!-- Sub text for the home page -->
+    <param name="frontPage.text" value="Provide your information below to register your account"/>
+    <!-- Set to true if the password should be pre-set, should NOT be used for anonymous access -->
+    <param name="preSetPassword" value="false"/>
+    <!-- If set to true, the user must suply a reason for the reuest -->
+    <param name="requireReason" value="false"/>
+
+    <!-- If set to true, a recaptcha is required, registration at https://www.google.com/recaptcha/intro/index.html required -->
+    <param name="requireReCaptcha" value="true"/>
+    <!-- Site key for Google ReCaptcha -->
+    <param name="rcSiteKey" value="#[GOOGLE_CAPTCHA_SITE_KEY]"/>
+    <!-- Secret key for Google ReCaptcha -->
+    <param name="rcSecret" value="#[GOOGLE_CAPTCHA_SECRET]"/>
+
+    <!-- Set to true if the user must accept terms and conditions -->
+    <param name="requireTermsAndConditions" value="false"/>
+    <!-- Terms and conditions text, rendered as HTML -->
+    <param name="termsAndConditionsText" value=""/>
+
+    <!-- Set to true if a custom class, implementing com.tremolosecurity.scalejs.register.sdk.CreateRegisterUser -->
+    <param name="useCallWorkflowClass" value="false"/>
+
+
+    <!-- for each attribute, have an attributeNames as the name of the attribute -->
+    <param name="attributeNames" value="uid"/>
+    <!-- how to display the attribute -->
+    <param name="uid.displayName" value="Login ID"/>
+    <!-- The message to show if the regular expression fails -->
+    <param name="uid.regExFailedMsg" value="Invalid login id"/>
+<param name="uid.regEx" value=".*" />
+    <!-- Minimum number of characters -->
+    <param name="uid.minChars" value="0"/>
+    <!-- Maximum number of characters (0 for unlimited) -->
+    <param name="uid.maxChars" value="0"/>
+    <!-- Set to true if this value must be unique in the virtual directory -->
+    <param name="uid.unique" value="true"/>
+    <!-- May be text or list -->
+    <param name="uid.type" value="text"/>
+
+
+
+    <param name="attributeNames" value="givenName"/>
+    <param name="givenName.displayName" value="First Name"/>
+    <param name="givenName.regExFailedMsg" value="Invalid first name"/>
+    <param name="givenName.regEx" value=".*" />
+    <param name="givenName.minChars" value="0"/>
+    <param name="givenName.maxChars" value="0"/>
+    <param name="givenName.unique" value="false"/>
+    <param name="givenName.type" value="text"/>
+
+    <param name="attributeNames" value="sn"/>
+    <param name="sn.displayName" value="Last Name"/>
+    <param name="sn.regExFailedMsg" value="Invalid last name"/>
+    <param name="sn.regEx" value=".*" />
+    <param name="sn.minChars" value="0"/>
+    <param name="sn.maxChars" value="0"/>
+    <param name="sn.unique" value="false"/>
+    <param name="sn.type" value="text"/>
+
+    <param name="attributeNames" value="mail"/>
+    <param name="mail.displayName" value="Email Address"/>
+    <param name="mail.regExFailedMsg" value="Invalid email address"/>
+    <param name="mail.regEx" value=".*@.*" />
+    <param name="mail.minChars" value="0"/>
+    <param name="mail.maxChars" value="0"/>
+    <param name="mail.unique" value="true"/>
+    <param name="mail.type" value="text"/>
+
+    <param name="attributeNames" value="displayName"/>
+    <param name="displayName.displayName" value="First Name"/>
+    <param name="displayName.regExFailedMsg" value="Invalid display name"/>
+    <param name="displayName.regEx" value=".*" />
+    <param name="displayName.minChars" value="0"/>
+    <param name="displayName.maxChars" value="0"/>
+    <param name="displayName.unique" value="false"/>
+    <param name="displayName.type" value="text"/>
+
+
+
+
+</filter>
+          </filterChain>
+          <uri>/scale-register/register</uri>
+
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+
       </urls>
       <!-- The cookie configuration determines how sessions are managed for this application -->
       <cookieConfig>
@@ -486,6 +612,43 @@
             </mapping>
             </tasks>
           </workflow>
+          <workflow  name="ipa-user-selfregistration" label="FreeIPA User Self Registration" description="User self registration from ScaleJS" inList="false" orgid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
+            <tasks>
+
+              <approval label="Approve Access to LDAP">
+                <emailTemplate>You have open approvals</emailTemplate>
+                <approvers>
+                  <rule scope="group" constraint="cn=#[OU_SELF_REG_APPROVER_GROUP],cn=groups,ou=freeipa,o=Tremolo" />
+                </approvers>
+                <onSuccess>
+                  <mapping  strict="true">
+                    <map>
+                      <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+                      <mapping targetAttributeName="givenname" sourceType="user" targetAttributeSource="givenName"/>
+                      <mapping targetAttributeName="sn" sourceType="user" targetAttributeSource="sn"/>
+                      <mapping targetAttributeName="displayname" sourceType="user" targetAttributeSource="displayName"/>
+                      <mapping targetAttributeName="gecos" sourceType="user" targetAttributeSource="displayName"/>
+                      <mapping targetAttributeName="mail" sourceType="user" targetAttributeSource="mail"/>
+                    </map>
+                    <onSuccess>
+
+                      <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="true" />
+                      <notifyUser subject="Your profile has been created" mailAttrib="mail">
+                        <msg>
+            Your account has been created, you will receive an email to set your password.
+          </msg>
+                      </notifyUser>
+                      <customTask className="com.tremolosecurity.provisioning.customTasks.SetPassword">
+                        <param name="mechName" value="passwordReset"/>
+                      </customTask>
+                    </onSuccess>
+                  </mapping>
+                </onSuccess>
+              </approval>
+
+
+              </tasks>
+            </workflow>
       </workflows>
       <approvalDB>
         <hibernateDialect>#[OU_HIBERNATE_DIALECT]</hibernateDialect>
