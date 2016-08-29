@@ -33,6 +33,7 @@ should be added to the keystore.
 | SMTP_USER | User name for accessing the email server | user@domain.com |
 | SMTP_PASSWORD | Password for the user for the email server | ***** |
 | SMTP_TLS | true/false if the SMTP server uses TLS | true |
+| OU_AUDITOR_GROUP | The name (cn) of a group in FreeIPA that provides access for auditors | system-auditors |
 | JAVA_OPTS | List of Java system properties, MUST include unisonKeystorePassword | -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -DunisonKeystorePassword=start123 |
 
 ## Use

@@ -388,11 +388,12 @@
       <reports>
         <report orgID="687da09f-8ec1-48ac-b035-f2f182b9bd1e" name="My Open Requests" description="List of your currently open requests and the approvers responsible for acting on them" groupBy="id" groupings="true">
         <paramater>currentUser</paramater>
-        <sql>select  approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.requestReason AS `Request Reason`, concat(users.givenName,' ',users.sn) as `Subject Name`, users.mail as `Subject Email`, approvers.givenName as `First Name`,approvers.sn as `Last Name`,approvers.mail as `Email`  from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where users.userKey=? AND approvedTS is null order by approvals.createTS ASC, approvals.id ASC</sql>
+        <sql>select  approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`, concat((SELECT value FROM userAttributes WHERE userAttributes.name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE userAttributes.name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`, (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`  from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where users.userKey=? AND approvedTS is null order by approvals.createTS ASC, approvals.id ASC</sql>
         <headerFields>Approval</headerFields>
         <headerFields>Subject Name</headerFields>
         <headerFields>Subject Email</headerFields>
         <headerFields>Workflow Name</headerFields>
+        <headerFields>Workflow Label</headerFields>
         <headerFields>Request Reason</headerFields>
         <dataFields>First Name</dataFields>
         <dataFields>Last Name</dataFields>
@@ -400,8 +401,9 @@
     </report>
     <report orgID="687da09f-8ec1-48ac-b035-f2f182b9bd1e" name="Approvals Completed by Me" description="All approvals you approved or denied" groupBy="wid" groupings="false">
         <paramater>currentUser</paramater>
-        <sql>select  workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.requestReason AS `Request Reason`, concat(users.givenName,' ',users.sn) as `Subject Name`, users.mail as `Subject Email`, approvers.givenName as `First Name`,approvers.sn as `Last Name`,approvers.mail as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvers.userKey=? order by approvals.approvedTS DESC; </sql>
+        <sql>select  workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`, concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`, (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvers.userKey=? order by approvals.approvedTS DESC; </sql>
         <dataFields>Workflow Name</dataFields>
+        <dataFields>Workflow Label</dataFields>
         <dataFields>Subject Name</dataFields>
         <dataFields>Subject Email</dataFields>
         <dataFields>Request Reason</dataFields>
@@ -410,87 +412,91 @@
         <dataFields>Approved Date</dataFields>
     </report>
     <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Open Approvals" description="Lists all of the approvals that are currently waiting action" groupBy="id" groupings="true">
-        <sql>select&#xD;
+    <sql>select&#xD;
 &#xD;
-approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.requestReason AS `Request Reason`,&#xD;
-concat(users.givenName,' ',users.sn) as `Subject Name`, users.mail as `Subject Email`,&#xD;
-approvers.givenName as `First Name`,approvers.sn as `Last Name`,approvers.mail as `Email`&#xD;
+approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`,&#xD;
+concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`,&#xD;
+(SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`&#xD;
 &#xD;
 from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where approvedTS is null&#xD;
 order by approvals.createTS ASC, approvals.id ASC</sql>
-        <headerFields>Approval</headerFields>
-        <headerFields>Subject Name</headerFields>
-        <headerFields>Subject Email</headerFields>
-        <headerFields>Workflow Name</headerFields>
-        <headerFields>Request Reason</headerFields>
-        <dataFields>First Name</dataFields>
-        <dataFields>Last Name</dataFields>
-        <dataFields>Email</dataFields>
-    </report>
-    <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Completed Approvals" description="All approvals completed in a given set of dates" groupBy="wid" groupings="true">
-        <paramater>beginDate</paramater>
-        <paramater>endDate</paramater>
-        <sql>select &#xD;
-workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.requestReason AS `Request Reason`,&#xD;
-concat(users.givenName,' ',users.sn) as `Subject Name`, users.mail as `Subject Email`,&#xD;
-approvers.givenName as `First Name`,approvers.sn as `Last Name`,approvers.mail as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason&#xD;
+    <headerFields>Approval</headerFields>
+    <headerFields>Subject Name</headerFields>
+    <headerFields>Subject Email</headerFields>
+    <headerFields>Workflow Name</headerFields>
+    <headerFields>Workflow Label</headerFields>
+    <headerFields>Request Reason</headerFields>
+    <dataFields>First Name</dataFields>
+    <dataFields>Last Name</dataFields>
+    <dataFields>Email</dataFields>
+  </report>
+  <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Completed Approvals" description="All approvals completed in a given set of dates" groupBy="wid" groupings="true">
+    <paramater>beginDate</paramater>
+    <paramater>endDate</paramater>
+    <sql>select &#xD;
+workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`,&#xD;
+concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`,&#xD;
+(SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason&#xD;
 from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvals.approvedTS &gt;= ? AND approvals.approvedTS &lt;= ? order by approvals.id ASC,workflows.id ASC;&#xD;
 </sql>
-        <headerFields>Workflow Name</headerFields>
-        <headerFields>Subject Name</headerFields>
-        <headerFields>Subject Email</headerFields>
-        <headerFields>Request Reason</headerFields>
-        <dataFields>Approval</dataFields>
-        <dataFields>First Name</dataFields>
-        <dataFields>Last Name</dataFields>
-        <dataFields>Email</dataFields>
-        <dataFields>Approval Result</dataFields>
-    </report>
-    <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Single User Change Log" description="All changes to the chosen user" groupBy="id" groupings="true">
-        <paramater>userKey</paramater>
-        <sql>select&#xD;
-users.givenName AS `First Name`, users.sn AS `Last Name`, users.mail AS `Email Address` ,workflows.id,&#xD;
-workflows.name as `Workflow Name`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
+    <headerFields>Workflow Name</headerFields>
+    <headerFields>Workflow Label</headerFields>
+    <headerFields>Subject Name</headerFields>
+    <headerFields>Subject Email</headerFields>
+    <headerFields>Request Reason</headerFields>
+    <dataFields>Approval</dataFields>
+    <dataFields>First Name</dataFields>
+    <dataFields>Last Name</dataFields>
+    <dataFields>Email</dataFields>
+    <dataFields>Approval Result</dataFields>
+  </report>
+  <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Single User Change Log" description="All changes to the chosen user" groupBy="id" groupings="true">
+    <paramater>userKey</paramater>
+    <sql>select&#xD;
+(SELECT value FROM userAttributes WHERE userAttributes.name='givenName' AND userid=users.id) AS `First Name`, (SELECT value FROM userAttributes WHERE userAttributes.name='sn' AND userid=users.id) AS `Last Name`, (SELECT value FROM userAttributes WHERE userAttributes.name='mail' AND userid=users.id) AS `Email Address` ,workflows.id,&#xD;
+workflows.name as `Workflow Name`,workflows.label AS `Workflow Label`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
 auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribute' END AS `Target Type`,auditLogs.attribute AS `Name`,auditLogs.val AS `Value`&#xD;
 &#xD;
 &#xD;
  from users inner join auditLogs on users.id=auditLogs.userid inner join auditLogType on auditLogType.id=auditLogs.actionType inner join workflows on workflows.id=auditLogs.workflow where users.userKey=?&#xD;
  order by workflows.completeTS ASC ,workflows.id ASC , auditLogs.isEntry DESC</sql>
-        <headerFields>Workflow Name</headerFields>
-        <headerFields>Request Reason</headerFields>
-        <headerFields>Workflow Started</headerFields>
-        <headerFields>Workflow Completed</headerFields>
-        <headerFields>First Name</headerFields>
-        <headerFields>Last Name</headerFields>
-        <headerFields>Email Address</headerFields>
-        <dataFields>Action</dataFields>
-        <dataFields>Target Type</dataFields>
-        <dataFields>Name</dataFields>
-        <dataFields>Value</dataFields>
-    </report>
-    <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Change Log for Period" description="Changes to all users between the two selected dates" groupBy="id" groupings="true">
-        <paramater>beginDate</paramater>
-        <paramater>endDate</paramater>
-        <sql>select&#xD;
-users.givenName AS `First Name`, users.sn AS `Last Name`, users.mail AS `Email Address` ,workflows.id,&#xD;
-workflows.name as `Workflow Name`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
+    <headerFields>Workflow Name</headerFields>
+    <headerFields>Workflow Label</headerFields>
+    <headerFields>Request Reason</headerFields>
+    <headerFields>Workflow Started</headerFields>
+    <headerFields>Workflow Completed</headerFields>
+    <headerFields>First Name</headerFields>
+    <headerFields>Last Name</headerFields>
+    <headerFields>Email Address</headerFields>
+    <dataFields>Action</dataFields>
+    <dataFields>Target Type</dataFields>
+    <dataFields>Name</dataFields>
+    <dataFields>Value</dataFields>
+  </report>
+  <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Change Log for Period" description="Changes to all users between the two selected dates" groupBy="id" groupings="true">
+    <paramater>beginDate</paramater>
+    <paramater>endDate</paramater>
+    <sql>select&#xD;
+(SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id) AS `First Name`, (SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id) AS `Last Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) AS `Email Address` ,workflows.id,&#xD;
+workflows.name as `Workflow Name`,workflows.label AS `Workflow Label`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
 auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribute' END AS `Target Type`,auditLogs.attribute AS `Name`,auditLogs.val AS `Value`&#xD;
 &#xD;
 &#xD;
  from users inner join auditLogs on users.id=auditLogs.userid inner join auditLogType on auditLogType.id=auditLogs.actionType inner join workflows on workflows.id=auditLogs.workflow where workflows.completeTS &gt;= ? and workflows.completeTS &lt;= ?&#xD;
  order by workflows.completeTS ASC ,workflows.id ASC , auditLogs.isEntry DESC</sql>
-        <headerFields>Workflow Name</headerFields>
-        <headerFields>Request Reason</headerFields>
-        <headerFields>Workflow Started</headerFields>
-        <headerFields>Workflow Completed</headerFields>
-        <headerFields>First Name</headerFields>
-        <headerFields>Last Name</headerFields>
-        <headerFields>Email Address</headerFields>
-        <dataFields>Action</dataFields>
-        <dataFields>Target Type</dataFields>
-        <dataFields>Name</dataFields>
-        <dataFields>Value</dataFields>
-    </report>
+    <headerFields>Workflow Name</headerFields>
+    <headerFields>Workflow Label</headerFields>
+    <headerFields>Request Reason</headerFields>
+    <headerFields>Workflow Started</headerFields>
+    <headerFields>Workflow Completed</headerFields>
+    <headerFields>First Name</headerFields>
+    <headerFields>Last Name</headerFields>
+    <headerFields>Email Address</headerFields>
+    <dataFields>Action</dataFields>
+    <dataFields>Target Type</dataFields>
+    <dataFields>Name</dataFields>
+    <dataFields>Value</dataFields>
+  </report>
       </reports>
     </provisioning>
     </tremoloConfig>
