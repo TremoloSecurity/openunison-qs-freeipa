@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tremoloConfig xmlns="http://www.tremolosecurity.com/tremoloConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tremolosecurity.com/tremoloConfig tremoloConfig.xsd">
   <applications openSessionCookieName="openSession" openSessionTimeout="9000">
-    <application name="LoginTest" azTimeoutMillis="30000" >
+    <application name="ScaleJS" azTimeoutMillis="30000" >
       <urls>
         <!-- The regex attribute defines if the proxyTo tag should be interpreted with a regex or not -->
         <!-- The authChain attribute should be the name of an authChain -->
-        <url regex="false" authChain="formloginFilter" overrideHost="true" overrideReferer="true">
+        <url regex="false" authChain="loginForm" overrideHost="true" overrideReferer="true">
           <!-- Any number of host tags may be specified to allow for an application to work on multiple hosts.  Additionally an asterick (*) can be specified to make this URL available for ALL hosts -->
           <host>#[OU_HOST]</host>
           <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
           <filterChain>
-            <filter class="com.tremolosecurity.prelude.filters.LoginTest">
-              <!-- The path of the logout URI           -->
-              <param name="logoutURI" value="/logout"/>
-            </filter>
-          </filterChain>
+            <filter class="com.tremolosecurity.prelude.filters.StopProcessing" />
           <!-- The URI (aka path) of this URL -->
           <uri>/</uri>
-          <!-- Tells OpenUnison how to reach the downstream application.  The ${} lets you set any request variable into the URI, but most of the time ${fullURI} is sufficient -->
-          <proxyTo>http://dnm${fullURI}</proxyTo>
+
           <!-- List the various results that should happen -->
           <results>
-            <azSuccess>
-            </azSuccess>
+
+            <auFail>noauaz</auFail>
+            <azSuccess>scaleRedirect</azSuccess>
+            <azFail>noauaz</azFail>
           </results>
           <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
           The scope may be one of group, dn, filter, dynamicGroup or custom
@@ -35,7 +32,7 @@
             <rule scope="dn" constraint="o=Tremolo" />
           </azRules>
         </url>
-        <url regex="false" authChain="formloginFilter" overrideHost="true" overrideReferer="true">
+        <url regex="false" authChain="loginForm" overrideHost="true" overrideReferer="true">
           <!-- Any number of host tags may be specified to allow for an application to work on multiple hosts.  Additionally an asterick (*) can be specified to make this URL available for ALL hosts -->
           <host>#[OU_HOST]</host>
           <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
@@ -61,6 +58,81 @@
             <rule scope="dn" constraint="o=Tremolo" />
           </azRules>
         </url>
+        <url regex="false" authChain="loginForm" overrideHost="true" overrideReferer="true">
+          <host>#[OU_HOST]</host>
+          <filterChain>
+            <filter class="com.tremolosecurity.proxy.filters.RemovePrefix">
+              <param name="prefix" value="/scale"/>
+              <param name="attributeName" value="trimmedURI"/>
+            </filter>
+          </filterChain>
+          <uri>/scale</uri>
+          <proxyTo>https://cdn.rawgit.com/TremoloSecurity/OpenUnison/1.0.7/unison/unison-scalejs-main/src/main/html${trimmedURI}</proxyTo>
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+        <url regex="false" authChain="loginForm" overrideHost="true" overrideReferer="true">
+          <host>#[OU_HOST]</host>
+          <filterChain>
+            <filter class="com.tremolosecurity.scalejs.ws.ScaleMain">
+              <!-- The name of the attribute that stores the value to be displayed when referencing the currently logged in user, ie cn or displayName -->
+              <param name="displayNameAttribute" value="displayName"/>
+              <!-- The title to show on the home page -->
+              <param name="frontPage.title" value="FreeIPA Self Service Portal"/>
+              <!-- Sub text for the home page -->
+              <param name="frontPage.text" value="Use this portal for requesting and approving access to resources protected by FreeIPA"/>
+              <!-- Determines if a user can be edited -->
+              <param name="canEditUser" value="true"/>
+              <!-- The name of the workflow to run when a user submits an update request -->
+              <param name="workflowName" value="freeipa-update-user"/>
+              <!-- When the below number of minutes are left in the user's session, warn the user -->
+              <param name="warnMinutesLeft" value="5" />
+              <!-- For each attribute, define an attributeNames, displayName, readOnly -->
+              <param name="attributeNames" value="uid"/>
+              <param name="uid.displayName" value="Login ID"/>
+              <param name="uid.readOnly" value="true"/>
+              <param name="attributeNames" value="displayName"/>
+              <param name="displayName.displayName" value="Display Name"/>
+              <param name="displayName.readOnly" value="false"/>
+              <!-- The name of the attribute that identifies the user uniquely -->
+              <param name="uidAttributeName" value="uid"/>
+              <!-- An attribute that specifies which roles a user is a member of.  If left blank, then the user's DN in the virtual directory is compared against memberOf attributes -->
+              <param name="roleAttribute" value=""/>
+              <!-- List of attributes to include in the approval screen -->
+              <param name="approvalAttributeNames" value="uid"/>
+              <param name="approvalAttributeNames" value="givenName"/>
+              <param name="approvalAttributeNames" value="sn"/>
+              <param name="approvalAttributeNames" value="mail"/>
+              <param name="approvalAttributeNames" value="displayName"/>
+
+              <!-- Labels for each of the attributes -->
+              <param name="approvals.uid" value="Login ID"/>
+              <param name="approvals.givenName" value="First Name"/>
+              <param name="approvals.sn" value="Last Name"/>
+              <param name="approvals.mail" value="Email Address"/>
+              <param name="approvals.displayName" value="Display Name"/>
+              <!-- If set to true, the organization tree is shown on the main page, helpful when there are numerous links to organize them by organization -->
+              <param name="showPortalOrgs" value="false"/>
+              <!-- The URL to redirect the user to when they logout -->
+              <param name="logoutURL" value="/logout"/>
+              <!-- Optional class that can make dynamic decisions about editing the user's profile, must implement com.tremolosecurity.scalejs.sdk.UiDecisions -->
+              <param name="uiHelperClassName" value=""/>
+            </filter>
+          </filterChain>
+          <uri>/scale/main</uri>
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
       </urls>
       <!-- The cookie configuration determines how sessions are managed for this application -->
       <cookieConfig>
@@ -73,10 +145,40 @@
         <!-- The name of the AES-256 key in the keystore to use to encrypt this session -->
         <keyAlias>session-unison</keyAlias>
         <!-- If set to true, the cookie's secure flag is set to true and the browser will only send this cookie over https connections -->
-        <secure>false</secure>
+        <secure>true</secure>
         <!-- The number of secconds that the session should be allowed to be idle before no longer being valid -->
         <timeout>900</timeout>
         <!-- required but ignored -->
+        <scope>-1</scope>
+      </cookieConfig>
+    </application>
+    <application name="CheckSession" azTimeoutMillis="30000" >
+      <urls>
+        <url regex="false" authChain="anon" overrideHost="true" overrideReferer="true">
+          <host>#[OU_HOST]</host>
+          <filterChain>
+            <filter class="com.tremolosecurity.proxy.filters.CheckSession">
+              <!-- The name of the application who's session cookie data to check -->
+              <param name="applicationName" value="ScaleJS"/>
+            </filter>
+          </filterChain>
+          <uri>/scale/sessioncheck</uri>
+          <results>
+            <azSuccess>
+            </azSuccess>
+          </results>
+          <azRules>
+            <rule scope="dn" constraint="o=Tremolo" />
+          </azRules>
+        </url>
+      </urls>
+      <cookieConfig>
+        <sessionCookieName>checksession</sessionCookieName>
+        <domain>#[OU_HOST]</domain>
+        <logoutURI>/logout</logoutURI>
+        <keyAlias>session-unison</keyAlias>
+        <secure>true</secure>
+        <timeout>900</timeout>
         <scope>-1</scope>
       </cookieConfig>
     </application>
@@ -115,7 +217,7 @@
         </params>
       </authMech>
     </chain>
-    <chain name="formloginFilter" level="1">
+    <chain name="loginForm" level="1">
       <authMech>
         <name>loginForm</name>
         <required>required</required>
@@ -143,7 +245,98 @@
         <value>/auth/forms/logout.jsp</value>
       </result>
     </resultGroup>
+      <resultGroup name="noauaz">
+      <result>
+        <type>redirect</type>
+        <source>static</source>
+        <value>/auth/forms/defaultFailedLogin.jsp</value>
+      </result>
+    </resultGroup>
+    <resultGroup name="scaleRedirect">
+    <result>
+      <type>redirect</type>
+      <source>static</source>
+      <value>/scale/index.html</value>
+    </result>
+  </resultGroup>
+
   </resultGroups>
   <keyStorePath>/etc/openunison/unisonKeyStore.jks</keyStorePath>
   <keyStorePassword>#[unisonKeystorePassword]</keyStorePassword>
+  <provisioning>
+    <targets>
+      <target name="freeipa" className="com.tremolosecurity.unison.freeipa.FreeIPATarget">
+        <params>
+          <!-- The protocol and host of the FreeIPA IPA-Web server. Do NOT include any path information -->
+          <param name="url" value="https://#[FREEIPA_HOST]"/>
+          <!-- The user name (uid attribute) of a member of the admins group -->
+          <param name="userName" value="#[FREEIPA_ADMIN_USER]"/>
+          <!-- The password of the service account used to create accounts -->
+          <param name="password" value="#[FREEIPA_ADMIN_PASSWORD]"/>
+          <!-- If true, when a user is created a random password is generated so that the account is active and ready for use, but not usable with a password -->
+          <param name="createShadowAccounts" value="false"/>
+        </params>
+        <targetAttribute name="uid" source="uid" sourceType="user"/>
+        <targetAttribute name="givenname" source="givenname" sourceType="user"/>
+        <targetAttribute name="sn" source="sn" sourceType="user"/>
+        <targetAttribute name="mail" source="mail" sourceType="user"/>
+        <targetAttribute name="displayname" source="displayname" sourceType="user"/>
+        <targetAttribute name="gecos" source="gecos" sourceType="user"/>
+
+      </target>
+    </targets>
+    <workflows>
+
+      </workflows>
+      <approvalDB>
+        <hibernateDialect>#[OU_HIBERNATE_DIALECT]</hibernateDialect>
+        <driver>#[OU_JDBC_DRIVER]</driver>
+        <url>#[OU_JDBC_URL]</url>
+        <user>#[OU_JDBC_USER]</user>
+        <password>#[OU_JDBC_PASSWORD]</password>
+        <maxConns>10</maxConns>
+        <maxIdleConns>10</maxIdleConns>
+        <!-- <hibernateProperty name="hibernate.default_schema" value="public" /> -->
+        <userIdAttribute>uid</userIdAttribute>
+        <approverAttributes>
+          <value>givenName</value>
+          <value>sn</value>
+          <value>mail</value>
+          <value>uid</value>
+        </approverAttributes>
+        <userAttributes>
+          <value>givenName</value>
+          <value>sn</value>
+          <value>mail</value>
+          <value>uid</value>
+        </userAttributes>
+        <enabled>true</enabled>
+        <smtpHost>#[SMTP_HOST]</smtpHost>
+        <smtpPort>#[SMTP_PORT]</smtpPort>
+        <smtpUser>#[SMTP_USER]</smtpUser>
+        <smtpPassword>#[SMTP_PASSWORD]</smtpPassword>
+        <smtpSubject>Awaiting Approvals</smtpSubject>
+        <smtpFrom>#[SMTP_FROM]</smtpFrom>
+        <smtpTLS>#[SMTP_TLS]</smtpTLS>
+        <encryptionKey>session-unison</encryptionKey>
+        <smtpUseSOCKSProxy>false</smtpUseSOCKSProxy>
+        <smtpSOCKSProxyHost>
+        </smtpSOCKSProxyHost>
+        <smtpSOCKSProxyPort>0</smtpSOCKSProxyPort>
+        <smtpLocalhost>
+        </smtpLocalhost>
+        <validationQuery>#[OU_JDBC_VALIDATION]</validationQuery>
+      </approvalDB>
+      <org name="MyOrg" description="MyOrg Enterprise Applications" uuid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
+      </org>
+      <queueConfig isUseInternalQueue="true" maxProducers="5"  maxConsumers="5" taskQueueName="TremoloUnisonTaskQueue" smtpQueueName="TremoloUnisonSMTPQueue" encryptionKeyName="session-unison">
+      </queueConfig>
+      <portal>
+        
+      </portal>
+      <scheduler useDB="false" threadCount="3" instanceLabel="testing" instanceIPMask="127"/>
+      <listeners/>
+      <reports>
+      </reports>
+    </provisioning>
   </tremoloConfig>
