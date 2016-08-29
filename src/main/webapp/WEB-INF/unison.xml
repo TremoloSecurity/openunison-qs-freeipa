@@ -10,7 +10,11 @@
           <host>#[OU_HOST]</host>
           <!-- The filterChain allows for transformations of the request such as manipulating attributes and injecting headers -->
           <filterChain>
-            <filter class="com.tremolosecurity.prelude.filters.StopProcessing" />
+            <!--<filter class="com.tremolosecurity.prelude.filters.StopProcessing" />-->
+            <filter class="com.tremolosecurity.prelude.filters.LoginTest">
+              <!-- The path of the logout URI           -->
+              <param name="logoutURI" value="/logout"/>
+            </filter>
           </filterChain>
           <!-- The URI (aka path) of this URL -->
           <uri>/</uri>
@@ -18,9 +22,9 @@
           <!-- List the various results that should happen -->
           <results>
 
-            <auFail>noauaz</auFail>
+            <!--<auFail>noauaz</auFail>
             <azSuccess>scaleRedirect</azSuccess>
-            <azFail>noauaz</azFail>
+            <azFail>noauaz</azFail>-->
           </results>
           <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
           The scope may be one of group, dn, filter, dynamicGroup or custom
