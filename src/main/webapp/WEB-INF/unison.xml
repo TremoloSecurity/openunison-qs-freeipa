@@ -318,7 +318,7 @@
     <param name="mail.type" value="text"/>
 
     <param name="attributeNames" value="displayName"/>
-    <param name="displayName.displayName" value="First Name"/>
+    <param name="displayName.displayName" value="Display Name"/>
     <param name="displayName.regExFailedMsg" value="Invalid display name"/>
     <param name="displayName.regEx" value=".*" />
     <param name="displayName.minChars" value="0"/>
