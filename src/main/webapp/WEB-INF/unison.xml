@@ -365,8 +365,7 @@
         <smtpSOCKSProxyHost>
         </smtpSOCKSProxyHost>
         <smtpSOCKSProxyPort>0</smtpSOCKSProxyPort>
-        <smtpLocalhost>
-        </smtpLocalhost>
+        <smtpLocalhost>localhost</smtpLocalhost>
         <validationQuery>#[OU_JDBC_VALIDATION]</validationQuery>
       </approvalDB>
       <org name="MyOrg" description="MyOrg Enterprise Applications" uuid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
