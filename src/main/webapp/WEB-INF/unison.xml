@@ -750,7 +750,7 @@
             <!-- When to run the job -->
             <cronSchedule
                     seconds="0"
-                    minutes="0"
+                    minutes="*"
                     hours="*"
                     dayOfMonth="*"
                     month="*"
