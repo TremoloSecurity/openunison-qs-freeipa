@@ -73,10 +73,28 @@ limitations under the License.
         <input  class="form-control" placeholder="Password"  type="password" id="pwd" name="pwd" />
 <br/>
         <button class="btn btn-lg btn-danger btn-block" type="submit" name="submit" id="submit">Sign in</button><br />
-        <button class="btn btn-lg btn-danger btn-block" onClick="location.href='/scale-reset/index.html'">I Forgot My Password</button><br />
-        <button class="btn btn-lg btn-danger btn-block" onClick="location.href='/scale-register/index.html'">Register</button><br />
         <input type="hidden" name="target" id="target" value="<%= targetURL %>" />
       </form>
+      <br/>
+      <div class="panel panel-danger">
+            <div class="panel-heading">
+              <h3 class="panel-title">No Account?</h3>
+            </div>
+            <div class="panel-body">
+            <button class="btn btn-lg btn-danger btn-block" onclick="javascript:location.href='/scale-register/index.html'">Register</button>
+	    </div>
+          </div>
+<div class="panel panel-danger">
+            <div class="panel-heading">
+              <h3 class="panel-title">Forgot Your Password?</h3>
+            </div>
+            <div class="panel-body">
+            <button class="btn btn-lg btn-danger btn-block" onclick="javascript:location.href='/scale-reset/index.html'">Reset Password</button>
+            </div>
+          </div>
+
+		</div>
+	</div>
 		</div>
 	</div>
 
