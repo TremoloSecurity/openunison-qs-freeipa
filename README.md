@@ -48,3 +48,14 @@ OU_HOST with the value of the OU_HOST environment variable.  For instance, if
 OU_HOST is myapp.mycompany.lan use https://myapp.mycompany.lan/.  Once prompted
 for a username and password, use a uid and password from FreeIPA.  Once logged in, a page showing all headers,
 request and session variables is shown.
+
+## Production Deployment
+
+Once you've moved past a proof of concept and wish to move into production there are some areas that should be updated:
+
+1.  Fork the TS repo - Create a fork of this repo so you can make customizations
+2.  ScaleJS pages - This repo proxies the pages directly our of their github repo.  This is great for a quick POC, but for a production deployment you should copy down the ScaleJS pages so you can make edits, update the logos, etc.
+3.  Tweak the tuning parameters - All of the connection pools have parameters for the number of connections, timeouts, etc.
+4.  Remove components you don't need - If you don't need user self registration, just password reset and ScaleJS go ahead and remove it.
+5.  Create a database for the scheduler - See the OpenUnison documentation for specifics but you don't want scheduled tasks to be run on every OpenUnison instance, only one.
+6.  Connect to a JMS Server - Just as with the scheduler, connecting to an external JMS scheduler will provide scalability and high availability across a cluster.
