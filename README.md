@@ -60,3 +60,4 @@ Once you've moved past a proof of concept and wish to move into production there
 4.  Remove components you don't need - If you don't need user self registration, just password reset and ScaleJS go ahead and remove it.
 5.  Create a database for the scheduler - See the OpenUnison documentation for specifics but you don't want scheduled tasks to be run on every OpenUnison instance, only one.
 6.  Connect to a JMS Server - Just as with the scheduler, connecting to an external JMS scheduler will provide scalability and high availability across a cluster.
+7.  Create separate static keys for workflows, queues, etc - The unison-session key is used throughout the configuration for simplicity.  Once you are ready for production separate keys should be used for different functions to decrease the impact of a change or if one of the keys is compromised.
