@@ -16,8 +16,8 @@
           <uri>/</uri>
           <!-- List the various results that should happen -->
           <results>
-            <auFail>noauaz</auFail>
             <azSuccess>scaleRedirect</azSuccess>
+            <auFail>noauaz</auFail>
             <azFail>noauaz</azFail>
           </results>
           <!-- Determine if the currently logged in user may access the resource.  If ANY rule succeeds, the authorization succeeds.
@@ -174,40 +174,38 @@
           <host>#[OU_HOST]</host>
           <filterChain>
             <filter class="com.tremolosecurity.scalejs.password.ws.ScalePassword">
-  <!-- The name of the attribute that stores the value to be displayed when referencing the currently logged in user, ie cn or displayName -->
-  <param name="displayNameAttribute" value="displayName"/>
-  <!-- The title to show on the home page -->
-  <param name="frontPage.title" value="FreeIPA Password Reset"/>
-  <!-- Sub text for the home page -->
-  <param name="frontPage.text" value="Please enter your new password.  Your password must have an upper case, lower case, numeric and special character.  The password must be at least 8 characters long and not longer then 20.  Also, 3 consecutive characters from your first name, last name or user id can not appear in it."/>
-  <!-- The URL to access ScaleMain -->
-  <param name="homeURL" value="/scale/index.html"/>
-  <!-- The URL to redirect the user to when they logout -->
-  <param name="logoutURL" value="/logout"/>
-  <!-- The name of the attribute that identifies the user uniquely -->
-  <param name="uidAttributeName" value="uid"/>
-  <!-- Reason for the workflow -->
-  <param name="reason" value="Password reset"/>
-  <!-- Workflow for the password reset call -->
-  <param name="workflowName" value="ipa-password-self-reset"/>
-  <!-- Implementation of com.tremolosecurity.scalejs.password.sdk.PasswordValidator -->
-  <param name="validatorClassName" value="com.tremolosecurity.scalejs.password.validators.ActiveDirectoryValidator"/>
-
-  <!-- List of parameters for the validator -->
-  <param name="validator.params" value="requireLower=true"/>
-  <param name="validator.params" value="requireUpper=true"/>
-  <param name="validator.params" value="requireNumber=true"/>
-  <param name="validator.params" value="requireSpecial=true"/>
-  <param name="validator.params" value="minRequirements=4"/>
-  <param name="validator.params" value="maxChars=20"/>
-  <param name="validator.params" value="minChars=8"/>
-  <param name="validator.params" value="attributesToCheck=Last Name=sn"/>
-  <param name="validator.params" value="attributesToCheck=User Name=uid"/>
-  <param name="validator.params" value="attributesToCheck=First Name=givenName"/>
-</filter>
+              <!-- The name of the attribute that stores the value to be displayed when referencing the currently logged in user, ie cn or displayName -->
+              <param name="displayNameAttribute" value="displayName"/>
+              <!-- The title to show on the home page -->
+              <param name="frontPage.title" value="FreeIPA Password Reset"/>
+              <!-- Sub text for the home page -->
+              <param name="frontPage.text" value="Please enter your new password.  Your password must have an upper case, lower case, numeric and special character.  The password must be at least 8 characters long and not longer then 20.  Also, 3 consecutive characters from your first name, last name or user id can not appear in it."/>
+              <!-- The URL to access ScaleMain -->
+              <param name="homeURL" value="/scale/index.html"/>
+              <!-- The URL to redirect the user to when they logout -->
+              <param name="logoutURL" value="/logout"/>
+              <!-- The name of the attribute that identifies the user uniquely -->
+              <param name="uidAttributeName" value="uid"/>
+              <!-- Reason for the workflow -->
+              <param name="reason" value="Password reset"/>
+              <!-- Workflow for the password reset call -->
+              <param name="workflowName" value="ipa-password-self-reset"/>
+              <!-- Implementation of com.tremolosecurity.scalejs.password.sdk.PasswordValidator -->
+              <param name="validatorClassName" value="com.tremolosecurity.scalejs.password.validators.ActiveDirectoryValidator"/>
+              <!-- List of parameters for the validator -->
+              <param name="validator.params" value="requireLower=true"/>
+              <param name="validator.params" value="requireUpper=true"/>
+              <param name="validator.params" value="requireNumber=true"/>
+              <param name="validator.params" value="requireSpecial=true"/>
+              <param name="validator.params" value="minRequirements=4"/>
+              <param name="validator.params" value="maxChars=20"/>
+              <param name="validator.params" value="minChars=8"/>
+              <param name="validator.params" value="attributesToCheck=Last Name=sn"/>
+              <param name="validator.params" value="attributesToCheck=User Name=uid"/>
+              <param name="validator.params" value="attributesToCheck=First Name=givenName"/>
+            </filter>
           </filterChain>
           <uri>/scale-reset/password</uri>
-
           <results>
             <azSuccess>
             </azSuccess>
@@ -216,7 +214,6 @@
             <rule scope="dn" constraint="o=Tremolo" />
           </azRules>
         </url>
-
         <url regex="false" authChain="anon" overrideHost="true" overrideReferer="true">
           <host>#[OU_HOST]</host>
           <filterChain>
@@ -239,100 +236,84 @@
           <host>#[OU_HOST]</host>
           <filterChain>
             <filter class="com.tremolosecurity.scalejs.register.ws.ScaleRegister">
-          <!-- The name of the attribute that stores the value to be displayed when referencing the currently logged in user, ie cn or displayName -->
-    <param name="displayNameAttribute" value=""/>
-    <!-- The name of the attribute that identifies the user uniquely -->
-    <param name="uidAttributeName" value="uid"/>
-    <!-- If a custom submission class isn't used, the workflow to execute -->
-    <param name="workflowName" value="ipa-user-selfregistration"/>
-    <!-- The URL to redirect the user to when they logout -->
-    <param name="logoutURL" value="/logout"/>
-    <!-- The title to show on the home page -->
-    <param name="frontPage.title" value="Register an account in FreeIPA"/>
-    <!-- Sub text for the home page -->
-    <param name="frontPage.text" value="Provide your information below to register your account"/>
-    <!-- Set to true if the password should be pre-set, should NOT be used for anonymous access -->
-    <param name="preSetPassword" value="false"/>
-    <!-- If set to true, the user must suply a reason for the reuest -->
-    <param name="requireReason" value="false"/>
-
-    <!-- If set to true, a recaptcha is required, registration at https://www.google.com/recaptcha/intro/index.html required -->
-    <param name="requireReCaptcha" value="true"/>
-    <!-- Site key for Google ReCaptcha -->
-    <param name="rcSiteKey" value="#[GOOGLE_CAPTCHA_SITE_KEY]"/>
-    <!-- Secret key for Google ReCaptcha -->
-    <param name="rcSecret" value="#[GOOGLE_CAPTCHA_SECRET]"/>
-
-    <!-- Set to true if the user must accept terms and conditions -->
-    <param name="requireTermsAndConditions" value="false"/>
-    <!-- Terms and conditions text, rendered as HTML -->
-    <param name="termsAndConditionsText" value=""/>
-
-    <!-- Set to true if a custom class, implementing com.tremolosecurity.scalejs.register.sdk.CreateRegisterUser -->
-    <param name="useCallWorkflowClass" value="false"/>
-
-
-    <!-- for each attribute, have an attributeNames as the name of the attribute -->
-    <param name="attributeNames" value="uid"/>
-    <!-- how to display the attribute -->
-    <param name="uid.displayName" value="Login ID"/>
-    <!-- The message to show if the regular expression fails -->
-    <param name="uid.regExFailedMsg" value="Invalid login id"/>
-<param name="uid.regEx" value=".*" />
-    <!-- Minimum number of characters -->
-    <param name="uid.minChars" value="0"/>
-    <!-- Maximum number of characters (0 for unlimited) -->
-    <param name="uid.maxChars" value="0"/>
-    <!-- Set to true if this value must be unique in the virtual directory -->
-    <param name="uid.unique" value="true"/>
-    <!-- May be text or list -->
-    <param name="uid.type" value="text"/>
-
-
-
-    <param name="attributeNames" value="givenName"/>
-    <param name="givenName.displayName" value="First Name"/>
-    <param name="givenName.regExFailedMsg" value="Invalid first name"/>
-    <param name="givenName.regEx" value=".*" />
-    <param name="givenName.minChars" value="0"/>
-    <param name="givenName.maxChars" value="0"/>
-    <param name="givenName.unique" value="false"/>
-    <param name="givenName.type" value="text"/>
-
-    <param name="attributeNames" value="sn"/>
-    <param name="sn.displayName" value="Last Name"/>
-    <param name="sn.regExFailedMsg" value="Invalid last name"/>
-    <param name="sn.regEx" value=".*" />
-    <param name="sn.minChars" value="0"/>
-    <param name="sn.maxChars" value="0"/>
-    <param name="sn.unique" value="false"/>
-    <param name="sn.type" value="text"/>
-
-    <param name="attributeNames" value="mail"/>
-    <param name="mail.displayName" value="Email Address"/>
-    <param name="mail.regExFailedMsg" value="Invalid email address"/>
-    <param name="mail.regEx" value=".*@.*" />
-    <param name="mail.minChars" value="0"/>
-    <param name="mail.maxChars" value="0"/>
-    <param name="mail.unique" value="true"/>
-    <param name="mail.type" value="text"/>
-
-    <param name="attributeNames" value="displayName"/>
-    <param name="displayName.displayName" value="Display Name"/>
-    <param name="displayName.regExFailedMsg" value="Invalid display name"/>
-    <param name="displayName.regEx" value=".*" />
-    <param name="displayName.minChars" value="0"/>
-    <param name="displayName.maxChars" value="0"/>
-    <param name="displayName.unique" value="false"/>
-    <param name="displayName.type" value="text"/>
-
-
-
-
-</filter>
+              <!-- The name of the attribute that stores the value to be displayed when referencing the currently logged in user, ie cn or displayName -->
+              <param name="displayNameAttribute" value=""/>
+              <!-- The name of the attribute that identifies the user uniquely -->
+              <param name="uidAttributeName" value="uid"/>
+              <!-- If a custom submission class isn't used, the workflow to execute -->
+              <param name="workflowName" value="ipa-user-selfregistration"/>
+              <!-- The URL to redirect the user to when they logout -->
+              <param name="logoutURL" value="/logout"/>
+              <!-- The title to show on the home page -->
+              <param name="frontPage.title" value="Register an account in FreeIPA"/>
+              <!-- Sub text for the home page -->
+              <param name="frontPage.text" value="Provide your information below to register your account"/>
+              <!-- Set to true if the password should be pre-set, should NOT be used for anonymous access -->
+              <param name="preSetPassword" value="false"/>
+              <!-- If set to true, the user must suply a reason for the reuest -->
+              <param name="requireReason" value="false"/>
+              <!-- If set to true, a recaptcha is required, registration at https://www.google.com/recaptcha/intro/index.html required -->
+              <param name="requireReCaptcha" value="true"/>
+              <!-- Site key for Google ReCaptcha -->
+              <param name="rcSiteKey" value="#[GOOGLE_CAPTCHA_SITE_KEY]"/>
+              <!-- Secret key for Google ReCaptcha -->
+              <param name="rcSecret" value="#[GOOGLE_CAPTCHA_SECRET]"/>
+              <!-- Set to true if the user must accept terms and conditions -->
+              <param name="requireTermsAndConditions" value="false"/>
+              <!-- Terms and conditions text, rendered as HTML -->
+              <param name="termsAndConditionsText" value=""/>
+              <!-- Set to true if a custom class, implementing com.tremolosecurity.scalejs.register.sdk.CreateRegisterUser -->
+              <param name="useCallWorkflowClass" value="false"/>
+              <!-- for each attribute, have an attributeNames as the name of the attribute -->
+              <param name="attributeNames" value="uid"/>
+              <!-- how to display the attribute -->
+              <param name="uid.displayName" value="Login ID"/>
+              <!-- The message to show if the regular expression fails -->
+              <param name="uid.regExFailedMsg" value="Invalid login id"/>
+              <param name="uid.regEx" value=".*" />
+              <!-- Minimum number of characters -->
+              <param name="uid.minChars" value="0"/>
+              <!-- Maximum number of characters (0 for unlimited) -->
+              <param name="uid.maxChars" value="0"/>
+              <!-- Set to true if this value must be unique in the virtual directory -->
+              <param name="uid.unique" value="true"/>
+              <!-- May be text or list -->
+              <param name="uid.type" value="text"/>
+              <param name="attributeNames" value="givenName"/>
+              <param name="givenName.displayName" value="First Name"/>
+              <param name="givenName.regExFailedMsg" value="Invalid first name"/>
+              <param name="givenName.regEx" value=".*" />
+              <param name="givenName.minChars" value="0"/>
+              <param name="givenName.maxChars" value="0"/>
+              <param name="givenName.unique" value="false"/>
+              <param name="givenName.type" value="text"/>
+              <param name="attributeNames" value="sn"/>
+              <param name="sn.displayName" value="Last Name"/>
+              <param name="sn.regExFailedMsg" value="Invalid last name"/>
+              <param name="sn.regEx" value=".*" />
+              <param name="sn.minChars" value="0"/>
+              <param name="sn.maxChars" value="0"/>
+              <param name="sn.unique" value="false"/>
+              <param name="sn.type" value="text"/>
+              <param name="attributeNames" value="mail"/>
+              <param name="mail.displayName" value="Email Address"/>
+              <param name="mail.regExFailedMsg" value="Invalid email address"/>
+              <param name="mail.regEx" value=".*@.*" />
+              <param name="mail.minChars" value="0"/>
+              <param name="mail.maxChars" value="0"/>
+              <param name="mail.unique" value="true"/>
+              <param name="mail.type" value="text"/>
+              <param name="attributeNames" value="displayName"/>
+              <param name="displayName.displayName" value="Display Name"/>
+              <param name="displayName.regExFailedMsg" value="Invalid display name"/>
+              <param name="displayName.regEx" value=".*" />
+              <param name="displayName.minChars" value="0"/>
+              <param name="displayName.maxChars" value="0"/>
+              <param name="displayName.unique" value="false"/>
+              <param name="displayName.type" value="text"/>
+            </filter>
           </filterChain>
           <uri>/scale-register/register</uri>
-
           <results>
             <azSuccess>
             </azSuccess>
@@ -341,7 +322,6 @@
             <rule scope="dn" constraint="o=Tremolo" />
           </azRules>
         </url>
-
       </urls>
       <!-- The cookie configuration determines how sessions are managed for this application -->
       <cookieConfig>
@@ -416,50 +396,51 @@
       </params>
     </mechanism>
     <mechanism name="passwordReset">
-        <uri>/auth/passwdReset</uri>
-        <className>com.tremolosecurity.proxy.auth.PasswordReset</className>
-        <init>
-            <!-- Database driver -->
-                <param name="driver" value="#[OU_JDBC_DRIVER]"/>
-                <!-- JDBC URL -->
-                <param name="url" value="#[OU_JDBC_PWD_URL]"/>
-                <!-- DB User -->
-                <param name="user" value="#[OU_JDBC_USER]"/>
-                <!-- DB Password -->
-                <param name="password" value="#[OU_JDBC_PASSWORD]"/>
-                <!-- Maximum number of connections -->
-                <param name="maxCons" value="10"/>
-                <!-- Maximum number of connections not actively working -->
-                <param name="maxIdleCons" value="10"/>
-                <!-- The URI to redirect users to after being authenticated if the user's session is over -->
-                <param name="passwordResetURI" value="/scale-reset/index.html"/>
-                <!-- The number of minutes a key is valid -->
-                <param name="minValidKey" value="20"/>
-                <!-- SMTP Host -->
-                <param name="smtpHost" value="#[SMTP_HOST]"/>
-                <!-- SMTP port -->
-                <param name="smtpPort" value="#[SMTP_PORT]"/>
-                <!-- SMTP user -->
-                <param name="smtpUser" value="#[SMTP_USER]"/>
-                <!-- SMTP Password -->
-                <param name="smtpPassword" value="#[SMTP_PASSWORD]"/>
-                <!-- Email with key subject line -->
-                <param name="smtpSubject" value="Password Reset"/>
-                <!-- Message for the password reset, ${key} for the user's key -->
-                <param name="smtpMsg" value="Click to reset: https://#[OU_HOST]/auth/passwdReset?key=${key}"/>
-                <!-- The email address for the "From" -->
-                <param name="smtpFrom" value="#[SMTP_FROM]"/>
-                <!-- Set to true if using TLS -->
-                <param name="smtpTLS" value="#[SMTP_TLS]"/>
-                <!-- Set to true to enable this mechanism -->
-                <param name="enabled" value="true"/>
-                <!-- The HibernateSQL dialect -->
-                <param name="dialect" value="#[OU_HIBERNATE_DIALECT]"/>
-                <!-- Validation query to make sure the connection is still available -->
-                <param name="validationQuery" value="#[OU_JDBC_VALIDATION]"/>
-        </init>
-        <params></params>
-</mechanism>
+      <uri>/auth/passwdReset</uri>
+      <className>com.tremolosecurity.proxy.auth.PasswordReset</className>
+      <init>
+        <!-- Database driver -->
+        <param name="driver" value="#[OU_JDBC_DRIVER]"/>
+        <!-- JDBC URL -->
+        <param name="url" value="#[OU_JDBC_PWD_URL]"/>
+        <!-- DB User -->
+        <param name="user" value="#[OU_JDBC_USER]"/>
+        <!-- DB Password -->
+        <param name="password" value="#[OU_JDBC_PASSWORD]"/>
+        <!-- Maximum number of connections -->
+        <param name="maxCons" value="10"/>
+        <!-- Maximum number of connections not actively working -->
+        <param name="maxIdleCons" value="10"/>
+        <!-- The URI to redirect users to after being authenticated if the user's session is over -->
+        <param name="passwordResetURI" value="/scale-reset/index.html"/>
+        <!-- The number of minutes a key is valid -->
+        <param name="minValidKey" value="20"/>
+        <!-- SMTP Host -->
+        <param name="smtpHost" value="#[SMTP_HOST]"/>
+        <!-- SMTP port -->
+        <param name="smtpPort" value="#[SMTP_PORT]"/>
+        <!-- SMTP user -->
+        <param name="smtpUser" value="#[SMTP_USER]"/>
+        <!-- SMTP Password -->
+        <param name="smtpPassword" value="#[SMTP_PASSWORD]"/>
+        <!-- Email with key subject line -->
+        <param name="smtpSubject" value="Password Reset"/>
+        <!-- Message for the password reset, ${key} for the user's key -->
+        <param name="smtpMsg" value="Click to reset: https://#[OU_HOST]/auth/passwdReset?key=${key}"/>
+        <!-- The email address for the "From" -->
+        <param name="smtpFrom" value="#[SMTP_FROM]"/>
+        <!-- Set to true if using TLS -->
+        <param name="smtpTLS" value="#[SMTP_TLS]"/>
+        <!-- Set to true to enable this mechanism -->
+        <param name="enabled" value="true"/>
+        <!-- The HibernateSQL dialect -->
+        <param name="dialect" value="#[OU_HIBERNATE_DIALECT]"/>
+        <!-- Validation query to make sure the connection is still available -->
+        <param name="validationQuery" value="#[OU_JDBC_VALIDATION]"/>
+      </init>
+      <params>
+      </params>
+    </mechanism>
   </authMechs>
   <authChains>
     <!-- An anonymous authentication chain MUST be level 0 -->
@@ -485,21 +466,20 @@
         </params>
       </authMech>
     </chain>
-
     <chain name="resetPassword" level="5">
-        <authMech>
-                <name>passwordReset</name>
-                <required>required</required>
-                <params>
-                        <!-- The page to collect the user's email address -->
-                        <param name="emailCollectionRedir" value="/auth/forms/pwdResetEmail.jsp"/>
-                        <!-- The splash screen telling the user a reset message has been sent -->
-                        <param name="splashRedirect" value="/auth/forms/pwdResetSplash.jsp"/>
-                        <!-- Page to show the user when an email address can't be found -->
-                        <param name="noUserSplash" value="/auth/forms/pwdResetNoUser.jsp"/>
-                </params>
-        </authMech>
-</chain>
+      <authMech>
+        <name>passwordReset</name>
+        <required>required</required>
+        <params>
+          <!-- The page to collect the user's email address -->
+          <param name="emailCollectionRedir" value="/auth/forms/pwdResetEmail.jsp"/>
+          <!-- The splash screen telling the user a reset message has been sent -->
+          <param name="splashRedirect" value="/auth/forms/pwdResetSplash.jsp"/>
+          <!-- Page to show the user when an email address can't be found -->
+          <param name="noUserSplash" value="/auth/forms/pwdResetNoUser.jsp"/>
+        </params>
+      </authMech>
+    </chain>
   </authChains>
   <resultGroups>
     <!-- The name attribute is how the resultGroup is referenced in the URL -->
@@ -581,62 +561,60 @@
               </notifyUser>
             </onSuccess>
           </mapping>
-          </tasks>
-        </workflow>
-        <workflow  name="ipa-password-self-reset" label="FreeIPA User Self Service Password Update" description="Password self service update from ScaleJS" inList="false" orgid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
-          <tasks>
-            <mapping  strict="true">
-              <map>
-                <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
-              </map>
-              <onSuccess>
-                <customTask className="com.tremolosecurity.provisioning.customTasks.LoadGroups">
-                  <param name="nameAttr" value="uid"/>
-                  <param name="inverse" value="false"/>
-                </customTask>
-                <customTask className="com.tremolosecurity.provisioning.customTasks.LoadAttributes">
-                  <param name="name" value="mail"/>
-                  <param name="nameAttr" value="uid"/>
-                </customTask>
-                <provision sync="true" target="freeipa" setPassword="true" onlyPassedInAttributes="true" >
-                  <attributes>
-                    <value>uid</value>
-                  </attributes>
-                </provision>
-                <notifyUser subject="Your password has been updated" mailAttrib="mail">
-                  <msg>
-      Your profile has been updated.  If you didn't update your password, please contact support immediately.
-    </msg>
+        </tasks>
+      </workflow>
+      <workflow  name="ipa-password-self-reset" label="FreeIPA User Self Service Password Update" description="Password self service update from ScaleJS" inList="false" orgid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
+        <tasks>
+          <mapping  strict="true">
+            <map>
+              <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+            </map>
+            <onSuccess>
+              <customTask className="com.tremolosecurity.provisioning.customTasks.LoadGroups">
+                <param name="nameAttr" value="uid"/>
+                <param name="inverse" value="false"/>
+              </customTask>
+              <customTask className="com.tremolosecurity.provisioning.customTasks.LoadAttributes">
+                <param name="name" value="mail"/>
+                <param name="nameAttr" value="uid"/>
+              </customTask>
+              <provision sync="true" target="freeipa" setPassword="true" onlyPassedInAttributes="true" >
+                <attributes>
+                  <value>uid</value>
+                </attributes>
+              </provision>
+              <notifyUser subject="Your password has been updated" mailAttrib="mail">
+                <msg>
+                        Your profile has been updated.  If you didn't update your password, please contact support immediately.
+                      </msg>
                 </notifyUser>
               </onSuccess>
             </mapping>
-            </tasks>
-          </workflow>
-          <workflow  name="ipa-user-selfregistration" label="FreeIPA User Self Registration" description="User self registration from ScaleJS" inList="false" orgid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
-            <tasks>
-
-              <approval label="Approve Access to LDAP">
-                <emailTemplate>You have open approvals</emailTemplate>
-                <approvers>
-                  <rule scope="group" constraint="cn=#[OU_SELF_REG_APPROVER_GROUP],cn=groups,ou=freeipa,o=Tremolo" />
-                </approvers>
-                <onSuccess>
-                  <mapping  strict="true">
-                    <map>
-                      <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
-                      <mapping targetAttributeName="givenname" sourceType="user" targetAttributeSource="givenName"/>
-                      <mapping targetAttributeName="sn" sourceType="user" targetAttributeSource="sn"/>
-                      <mapping targetAttributeName="displayname" sourceType="user" targetAttributeSource="displayName"/>
-                      <mapping targetAttributeName="gecos" sourceType="user" targetAttributeSource="displayName"/>
-                      <mapping targetAttributeName="mail" sourceType="user" targetAttributeSource="mail"/>
-                    </map>
-                    <onSuccess>
-
-                      <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="true" />
-                      <notifyUser subject="Your profile has been created" mailAttrib="mail">
-                        <msg>
-            Your account has been created, you will receive an email to set your password.
-          </msg>
+          </tasks>
+        </workflow>
+        <workflow  name="ipa-user-selfregistration" label="FreeIPA User Self Registration" description="User self registration from ScaleJS" inList="false" orgid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
+          <tasks>
+            <approval label="Approve Access to LDAP">
+              <emailTemplate>You have open approvals</emailTemplate>
+              <approvers>
+                <rule scope="group" constraint="cn=#[OU_SELF_REG_APPROVER_GROUP],cn=groups,ou=freeipa,o=Tremolo" />
+              </approvers>
+              <onSuccess>
+                <mapping  strict="true">
+                  <map>
+                    <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+                    <mapping targetAttributeName="givenname" sourceType="user" targetAttributeSource="givenName"/>
+                    <mapping targetAttributeName="sn" sourceType="user" targetAttributeSource="sn"/>
+                    <mapping targetAttributeName="displayname" sourceType="user" targetAttributeSource="displayName"/>
+                    <mapping targetAttributeName="gecos" sourceType="user" targetAttributeSource="displayName"/>
+                    <mapping targetAttributeName="mail" sourceType="user" targetAttributeSource="mail"/>
+                  </map>
+                  <onSuccess>
+                    <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="true" />
+                    <notifyUser subject="Your profile has been created" mailAttrib="mail">
+                      <msg>
+                                    Your account has been created, you will receive an email to set your password.
+                                  </msg>
                       </notifyUser>
                       <customTask className="com.tremolosecurity.provisioning.customTasks.SetPassword">
                         <param name="mechName" value="passwordReset"/>
@@ -645,174 +623,240 @@
                   </mapping>
                 </onSuccess>
               </approval>
-
-
+            </tasks>
+          </workflow>
+          <workflow  name="ipa-group-access" label="Access to $groupName$" description="$descriptionAttribute$" inList="true" orgid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
+            <dynamicConfiguration dynamic="true" className="com.tremolosecurity.provisioning.dynamicwf.LDAPDynaicWorkflows" >
+              <!-- Where to start searching for groups -->
+              <param name="searchBase" value="cn=groups,ou=freeipa,o=Tremolo" />
+              <!-- Filter to use when searching for groups -->
+              <param name="searchFilter" value="(&amp;(objectClass=groupOfNames)(owner=*))" />
+              <!-- Name of the attribute that stores the group's name, required; Exposed as groupName in the workflow -->
+              <param name="groupNameAttribute" value="cn" />
+              <!-- Name of the attribute that stores the approver for access to this group; Exposed as approver in the workflow -->
+              <param name="approverAttribute" value="owner" />
+              <!-- Name of the attribute that stores a description, optional; Exposed as descriptionAttribute in the workflow -->
+              <param name="descriptionAttribute" value="description" />
+            </dynamicConfiguration>
+            <tasks>
+              <customTask className="com.tremolosecurity.provisioning.customTasks.LoadGroups">
+                <param name="nameAttr" value="uid"/>
+                <param name="inverse" value="false"/>
+              </customTask>
+              <customTask className="com.tremolosecurity.provisioning.customTasks.LoadAttributes">
+                <param name="name" value="mail"/>
+                <param name="nameAttr" value="uid"/>
+              </customTask>
+              <approval label="Approve Access to LDAP">
+                <emailTemplate>You have open approvals</emailTemplate>
+                <approvers>
+                  <rule scope="group" constraint="$approver$" />
+                </approvers>
+                <onSuccess>
+                  <mapping  strict="true">
+                    <map>
+                      <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+                    </map>
+                    <onSuccess>
+                      <addGroup name="$groupName$" remove="false"/>
+                      <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="true" />
+                      <notifyUser subject="Your profile has been created" mailAttrib="mail">
+                        <msg>
+                                      Your account has been created, you will receive an email to set your password.
+                                    </msg>
+                        </notifyUser>
+                        <customTask className="com.tremolosecurity.provisioning.customTasks.SetPassword">
+                          <param name="mechName" value="passwordReset"/>
+                        </customTask>
+                      </onSuccess>
+                    </mapping>
+                  </onSuccess>
+                  <onFailure>
+                    <mapping  strict="true">
+                      <map>
+                        <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+                      </map>
+                      <onSuccess>
+                        <addGroup name="$groupName$" remove="true"/>
+                        <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="true" />
+                        <notifyUser subject="Your profile has been created" mailAttrib="mail">
+                          <msg>
+                                        Your account has been created, you will receive an email to set your password.
+                                      </msg>
+                          </notifyUser>
+                          <customTask className="com.tremolosecurity.provisioning.customTasks.SetPassword">
+                            <param name="mechName" value="passwordReset"/>
+                          </customTask>
+                        </onSuccess>
+                      </mapping>
+                    </onFailure>
+                </approval>
               </tasks>
             </workflow>
-      </workflows>
-      <approvalDB>
-        <hibernateDialect>#[OU_HIBERNATE_DIALECT]</hibernateDialect>
-        <driver>#[OU_JDBC_DRIVER]</driver>
-        <url>#[OU_JDBC_URL]</url>
-        <user>#[OU_JDBC_USER]</user>
-        <password>#[OU_JDBC_PASSWORD]</password>
-        <maxConns>10</maxConns>
-        <maxIdleConns>10</maxIdleConns>
-        <!-- <hibernateProperty name="hibernate.default_schema" value="public" /> -->
-        <userIdAttribute>uid</userIdAttribute>
-        <approverAttributes>
-          <value>givenName</value>
-          <value>sn</value>
-          <value>mail</value>
-          <value>uid</value>
-        </approverAttributes>
-        <userAttributes>
-          <value>givenName</value>
-          <value>sn</value>
-          <value>mail</value>
-          <value>uid</value>
-        </userAttributes>
-        <enabled>true</enabled>
-        <smtpHost>#[SMTP_HOST]</smtpHost>
-        <smtpPort>#[SMTP_PORT]</smtpPort>
-        <smtpUser>#[SMTP_USER]</smtpUser>
-        <smtpPassword>#[SMTP_PASSWORD]</smtpPassword>
-        <smtpSubject>Awaiting Approvals</smtpSubject>
-        <smtpFrom>#[SMTP_FROM]</smtpFrom>
-        <smtpTLS>#[SMTP_TLS]</smtpTLS>
-        <encryptionKey>session-unison</encryptionKey>
-        <smtpUseSOCKSProxy>false</smtpUseSOCKSProxy>
-        <smtpSOCKSProxyHost>
-        </smtpSOCKSProxyHost>
-        <smtpSOCKSProxyPort>0</smtpSOCKSProxyPort>
-        <smtpLocalhost>localhost</smtpLocalhost>
-        <validationQuery>#[OU_JDBC_VALIDATION]</validationQuery>
-      </approvalDB>
-      <org name="MyOrg" description="MyOrg Enterprise Applications" uuid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
-        <orgs name="Audit Reports" description="Reports for auditors" uuid="fc8799cf-b947-4626-94bd-1ddda226bc16">
-          <azRules>
-            <rule scope="group" constraint="cn=#[OU_AUDITOR_GROUP],cn=groups,ou=freeipa,o=Tremolo"/>
-          </azRules>
-        </orgs>
-      </org>
-      <queueConfig isUseInternalQueue="true" maxProducers="5"  maxConsumers="5" taskQueueName="TremoloUnisonTaskQueue" smtpQueueName="TremoloUnisonSMTPQueue" encryptionKeyName="session-unison">
-      </queueConfig>
-      <portal>
-      </portal>
-      <scheduler useDB="false" threadCount="3" instanceLabel="testing" instanceIPMask="127"/>
-      <listeners/>
-      <reports>
-        <report orgID="687da09f-8ec1-48ac-b035-f2f182b9bd1e" name="My Open Requests" description="List of your currently open requests and the approvers responsible for acting on them" groupBy="id" groupings="true">
-        <paramater>currentUser</paramater>
-        <sql>select  approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`, concat((SELECT value FROM userAttributes WHERE userAttributes.name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE userAttributes.name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`, (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`  from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where users.userKey=? AND approvedTS is null order by approvals.createTS ASC, approvals.id ASC</sql>
-        <headerFields>Approval</headerFields>
-        <headerFields>Subject Name</headerFields>
-        <headerFields>Subject Email</headerFields>
-        <headerFields>Workflow Name</headerFields>
-        <headerFields>Workflow Label</headerFields>
-        <headerFields>Request Reason</headerFields>
-        <dataFields>First Name</dataFields>
-        <dataFields>Last Name</dataFields>
-        <dataFields>Email</dataFields>
-    </report>
-    <report orgID="687da09f-8ec1-48ac-b035-f2f182b9bd1e" name="Approvals Completed by Me" description="All approvals you approved or denied" groupBy="wid" groupings="false">
-        <paramater>currentUser</paramater>
-        <sql>select  workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`, concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`, (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvers.userKey=? order by approvals.approvedTS DESC; </sql>
-        <dataFields>Workflow Name</dataFields>
-        <dataFields>Workflow Label</dataFields>
-        <dataFields>Subject Name</dataFields>
-        <dataFields>Subject Email</dataFields>
-        <dataFields>Request Reason</dataFields>
-        <dataFields>Approval</dataFields>
-        <dataFields>Approval Result</dataFields>
-        <dataFields>Approved Date</dataFields>
-    </report>
-    <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Open Approvals" description="Lists all of the approvals that are currently waiting action" groupBy="id" groupings="true">
-    <sql>select&#xD;
-&#xD;
-approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`,&#xD;
-concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`,&#xD;
-(SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`&#xD;
-&#xD;
-from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where approvedTS is null&#xD;
-order by approvals.createTS ASC, approvals.id ASC</sql>
-    <headerFields>Approval</headerFields>
-    <headerFields>Subject Name</headerFields>
-    <headerFields>Subject Email</headerFields>
-    <headerFields>Workflow Name</headerFields>
-    <headerFields>Workflow Label</headerFields>
-    <headerFields>Request Reason</headerFields>
-    <dataFields>First Name</dataFields>
-    <dataFields>Last Name</dataFields>
-    <dataFields>Email</dataFields>
-  </report>
-  <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Completed Approvals" description="All approvals completed in a given set of dates" groupBy="wid" groupings="true">
-    <paramater>beginDate</paramater>
-    <paramater>endDate</paramater>
-    <sql>select &#xD;
-workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`,&#xD;
-concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`,&#xD;
-(SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason&#xD;
-from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvals.approvedTS &gt;= ? AND approvals.approvedTS &lt;= ? order by approvals.id ASC,workflows.id ASC;&#xD;
-</sql>
-    <headerFields>Workflow Name</headerFields>
-    <headerFields>Workflow Label</headerFields>
-    <headerFields>Subject Name</headerFields>
-    <headerFields>Subject Email</headerFields>
-    <headerFields>Request Reason</headerFields>
-    <dataFields>Approval</dataFields>
-    <dataFields>First Name</dataFields>
-    <dataFields>Last Name</dataFields>
-    <dataFields>Email</dataFields>
-    <dataFields>Approval Result</dataFields>
-  </report>
-  <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Single User Change Log" description="All changes to the chosen user" groupBy="id" groupings="true">
-    <paramater>userKey</paramater>
-    <sql>select&#xD;
-(SELECT value FROM userAttributes WHERE userAttributes.name='givenName' AND userid=users.id) AS `First Name`, (SELECT value FROM userAttributes WHERE userAttributes.name='sn' AND userid=users.id) AS `Last Name`, (SELECT value FROM userAttributes WHERE userAttributes.name='mail' AND userid=users.id) AS `Email Address` ,workflows.id,&#xD;
-workflows.name as `Workflow Name`,workflows.label AS `Workflow Label`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
-auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribute' END AS `Target Type`,auditLogs.attribute AS `Name`,auditLogs.val AS `Value`&#xD;
-&#xD;
-&#xD;
- from users inner join auditLogs on users.id=auditLogs.userid inner join auditLogType on auditLogType.id=auditLogs.actionType inner join workflows on workflows.id=auditLogs.workflow where users.userKey=?&#xD;
- order by workflows.completeTS ASC ,workflows.id ASC , auditLogs.isEntry DESC</sql>
-    <headerFields>Workflow Name</headerFields>
-    <headerFields>Workflow Label</headerFields>
-    <headerFields>Request Reason</headerFields>
-    <headerFields>Workflow Started</headerFields>
-    <headerFields>Workflow Completed</headerFields>
-    <headerFields>First Name</headerFields>
-    <headerFields>Last Name</headerFields>
-    <headerFields>Email Address</headerFields>
-    <dataFields>Action</dataFields>
-    <dataFields>Target Type</dataFields>
-    <dataFields>Name</dataFields>
-    <dataFields>Value</dataFields>
-  </report>
-  <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Change Log for Period" description="Changes to all users between the two selected dates" groupBy="id" groupings="true">
-    <paramater>beginDate</paramater>
-    <paramater>endDate</paramater>
-    <sql>select&#xD;
-(SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id) AS `First Name`, (SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id) AS `Last Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) AS `Email Address` ,workflows.id,&#xD;
-workflows.name as `Workflow Name`,workflows.label AS `Workflow Label`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
-auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribute' END AS `Target Type`,auditLogs.attribute AS `Name`,auditLogs.val AS `Value`&#xD;
-&#xD;
-&#xD;
- from users inner join auditLogs on users.id=auditLogs.userid inner join auditLogType on auditLogType.id=auditLogs.actionType inner join workflows on workflows.id=auditLogs.workflow where workflows.completeTS &gt;= ? and workflows.completeTS &lt;= ?&#xD;
- order by workflows.completeTS ASC ,workflows.id ASC , auditLogs.isEntry DESC</sql>
-    <headerFields>Workflow Name</headerFields>
-    <headerFields>Workflow Label</headerFields>
-    <headerFields>Request Reason</headerFields>
-    <headerFields>Workflow Started</headerFields>
-    <headerFields>Workflow Completed</headerFields>
-    <headerFields>First Name</headerFields>
-    <headerFields>Last Name</headerFields>
-    <headerFields>Email Address</headerFields>
-    <dataFields>Action</dataFields>
-    <dataFields>Target Type</dataFields>
-    <dataFields>Name</dataFields>
-    <dataFields>Value</dataFields>
-  </report>
+        </workflows>
+        <approvalDB>
+          <hibernateDialect>#[OU_HIBERNATE_DIALECT]</hibernateDialect>
+          <driver>#[OU_JDBC_DRIVER]</driver>
+          <url>#[OU_JDBC_URL]</url>
+          <user>#[OU_JDBC_USER]</user>
+          <password>#[OU_JDBC_PASSWORD]</password>
+          <maxConns>10</maxConns>
+          <maxIdleConns>10</maxIdleConns>
+          <!-- <hibernateProperty name="hibernate.default_schema" value="public" /> -->
+          <userIdAttribute>uid</userIdAttribute>
+          <approverAttributes>
+            <value>givenName</value>
+            <value>sn</value>
+            <value>mail</value>
+            <value>uid</value>
+          </approverAttributes>
+          <userAttributes>
+            <value>givenName</value>
+            <value>sn</value>
+            <value>mail</value>
+            <value>uid</value>
+          </userAttributes>
+          <enabled>true</enabled>
+          <smtpHost>#[SMTP_HOST]</smtpHost>
+          <smtpPort>#[SMTP_PORT]</smtpPort>
+          <smtpUser>#[SMTP_USER]</smtpUser>
+          <smtpPassword>#[SMTP_PASSWORD]</smtpPassword>
+          <smtpSubject>Awaiting Approvals</smtpSubject>
+          <smtpFrom>#[SMTP_FROM]</smtpFrom>
+          <smtpTLS>#[SMTP_TLS]</smtpTLS>
+          <encryptionKey>session-unison</encryptionKey>
+          <smtpUseSOCKSProxy>false</smtpUseSOCKSProxy>
+          <smtpSOCKSProxyHost>
+          </smtpSOCKSProxyHost>
+          <smtpSOCKSProxyPort>0</smtpSOCKSProxyPort>
+          <smtpLocalhost>localhost</smtpLocalhost>
+          <validationQuery>#[OU_JDBC_VALIDATION]</validationQuery>
+        </approvalDB>
+        <org name="MyOrg" description="MyOrg Enterprise Applications" uuid="687da09f-8ec1-48ac-b035-f2f182b9bd1e">
+          <orgs name="Audit Reports" description="Reports for auditors" uuid="fc8799cf-b947-4626-94bd-1ddda226bc16">
+            <azRules>
+              <rule scope="group" constraint="cn=#[OU_AUDITOR_GROUP],cn=groups,ou=freeipa,o=Tremolo"/>
+            </azRules>
+          </orgs>
+        </org>
+        <queueConfig isUseInternalQueue="true" maxProducers="5"  maxConsumers="5" taskQueueName="TremoloUnisonTaskQueue" smtpQueueName="TremoloUnisonSMTPQueue" encryptionKeyName="session-unison">
+        </queueConfig>
+        <portal>
+        </portal>
+        <scheduler useDB="false" threadCount="3" instanceLabel="testing" instanceIPMask="127"/>
+        <listeners/>
+        <reports>
+          <report orgID="687da09f-8ec1-48ac-b035-f2f182b9bd1e" name="My Open Requests" description="List of your currently open requests and the approvers responsible for acting on them" groupBy="id" groupings="true">
+            <paramater>currentUser</paramater>
+            <sql>select  approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`, concat((SELECT value FROM userAttributes WHERE userAttributes.name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE userAttributes.name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`, (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`  from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where users.userKey=? AND approvedTS is null order by approvals.createTS ASC, approvals.id ASC</sql>
+            <headerFields>Approval</headerFields>
+            <headerFields>Subject Name</headerFields>
+            <headerFields>Subject Email</headerFields>
+            <headerFields>Workflow Name</headerFields>
+            <headerFields>Workflow Label</headerFields>
+            <headerFields>Request Reason</headerFields>
+            <dataFields>First Name</dataFields>
+            <dataFields>Last Name</dataFields>
+            <dataFields>Email</dataFields>
+          </report>
+          <report orgID="687da09f-8ec1-48ac-b035-f2f182b9bd1e" name="Approvals Completed by Me" description="All approvals you approved or denied" groupBy="wid" groupings="false">
+            <paramater>currentUser</paramater>
+            <sql>select  workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`, concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`, (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvers.userKey=? order by approvals.approvedTS DESC; </sql>
+            <dataFields>Workflow Name</dataFields>
+            <dataFields>Workflow Label</dataFields>
+            <dataFields>Subject Name</dataFields>
+            <dataFields>Subject Email</dataFields>
+            <dataFields>Request Reason</dataFields>
+            <dataFields>Approval</dataFields>
+            <dataFields>Approval Result</dataFields>
+            <dataFields>Approved Date</dataFields>
+          </report>
+          <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Open Approvals" description="Lists all of the approvals that are currently waiting action" groupBy="id" groupings="true">
+            <sql>select&#xD;
+            &#xD;
+            approvals.id,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`,&#xD;
+            concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`,&#xD;
+            (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`&#xD;
+            &#xD;
+            from approvals inner join workflows on approvals.workflow=workflows.id inner join users on workflows.userid=users.id inner join allowedApprovers on approvals.id=allowedApprovers.approval inner join approvers on approvers.id=allowedApprovers.approver where approvedTS is null&#xD;
+            order by approvals.createTS ASC, approvals.id ASC</sql>
+            <headerFields>Approval</headerFields>
+            <headerFields>Subject Name</headerFields>
+            <headerFields>Subject Email</headerFields>
+            <headerFields>Workflow Name</headerFields>
+            <headerFields>Workflow Label</headerFields>
+            <headerFields>Request Reason</headerFields>
+            <dataFields>First Name</dataFields>
+            <dataFields>Last Name</dataFields>
+            <dataFields>Email</dataFields>
+          </report>
+          <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Completed Approvals" description="All approvals completed in a given set of dates" groupBy="wid" groupings="true">
+            <paramater>beginDate</paramater>
+            <paramater>endDate</paramater>
+            <sql>select &#xD;
+            workflows.id AS wid, approvals.id AS aid,approvals.label AS Approval ,approvals.createTS AS `Approval Opened`,workflows.name AS `Workflow Name`,workflows.label AS `Workflow Label`,workflows.requestReason AS `Request Reason`,&#xD;
+            concat((SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id),' ',(SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id)) as `Subject Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) as `Subject Email`,&#xD;
+            (SELECT value FROM approverAttributes WHERE name='givenName' AND approverid=approvers.id) as `First Name`,(SELECT value FROM approverAttributes WHERE name='sn' AND approverid=approvers.id) as `Last Name`,(SELECT value FROM approverAttributes WHERE name='mail' AND approverid=approvers.id) as `Email`,IF(approvals.approved = 1, 'Approved', 'Rejected') AS `Approval Result`,approvals.approvedTS AS `Approved Date`,approvals.reason AS Reason&#xD;
+            from approvals inner join approvers on approvals.approver=approvers.id inner join workflows on workflows.id=approvals.workflow inner join users on users.id=workflows.userid WHERE approvals.approvedTS &gt;= ? AND approvals.approvedTS &lt;= ? order by approvals.id ASC,workflows.id ASC;&#xD;
+          </sql>
+          <headerFields>Workflow Name</headerFields>
+          <headerFields>Workflow Label</headerFields>
+          <headerFields>Subject Name</headerFields>
+          <headerFields>Subject Email</headerFields>
+          <headerFields>Request Reason</headerFields>
+          <dataFields>Approval</dataFields>
+          <dataFields>First Name</dataFields>
+          <dataFields>Last Name</dataFields>
+          <dataFields>Email</dataFields>
+          <dataFields>Approval Result</dataFields>
+        </report>
+        <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Single User Change Log" description="All changes to the chosen user" groupBy="id" groupings="true">
+          <paramater>userKey</paramater>
+          <sql>select&#xD;
+          (SELECT value FROM userAttributes WHERE userAttributes.name='givenName' AND userid=users.id) AS `First Name`, (SELECT value FROM userAttributes WHERE userAttributes.name='sn' AND userid=users.id) AS `Last Name`, (SELECT value FROM userAttributes WHERE userAttributes.name='mail' AND userid=users.id) AS `Email Address` ,workflows.id,&#xD;
+          workflows.name as `Workflow Name`,workflows.label AS `Workflow Label`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
+          auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribute' END AS `Target Type`,auditLogs.attribute AS `Name`,auditLogs.val AS `Value`&#xD;
+          &#xD;
+          &#xD;
+           from users inner join auditLogs on users.id=auditLogs.userid inner join auditLogType on auditLogType.id=auditLogs.actionType inner join workflows on workflows.id=auditLogs.workflow where users.userKey=?&#xD;
+           order by workflows.completeTS ASC ,workflows.id ASC , auditLogs.isEntry DESC</sql>
+          <headerFields>Workflow Name</headerFields>
+          <headerFields>Workflow Label</headerFields>
+          <headerFields>Request Reason</headerFields>
+          <headerFields>Workflow Started</headerFields>
+          <headerFields>Workflow Completed</headerFields>
+          <headerFields>First Name</headerFields>
+          <headerFields>Last Name</headerFields>
+          <headerFields>Email Address</headerFields>
+          <dataFields>Action</dataFields>
+          <dataFields>Target Type</dataFields>
+          <dataFields>Name</dataFields>
+          <dataFields>Value</dataFields>
+        </report>
+        <report orgID="fc8799cf-b947-4626-94bd-1ddda226bc16" name="Change Log for Period" description="Changes to all users between the two selected dates" groupBy="id" groupings="true">
+          <paramater>beginDate</paramater>
+          <paramater>endDate</paramater>
+          <sql>select&#xD;
+          (SELECT value FROM userAttributes WHERE name='givenName' AND userid=users.id) AS `First Name`, (SELECT value FROM userAttributes WHERE name='sn' AND userid=users.id) AS `Last Name`, (SELECT value FROM userAttributes WHERE name='mail' AND userid=users.id) AS `Email Address` ,workflows.id,&#xD;
+          workflows.name as `Workflow Name`,workflows.label AS `Workflow Label`,workflows.startTS AS `Workflow Started`,workflows.completeTS AS `Workflow Completed`,workflows.requestReason AS `Request Reason`,&#xD;
+          auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribute' END AS `Target Type`,auditLogs.attribute AS `Name`,auditLogs.val AS `Value`&#xD;
+          &#xD;
+          &#xD;
+           from users inner join auditLogs on users.id=auditLogs.userid inner join auditLogType on auditLogType.id=auditLogs.actionType inner join workflows on workflows.id=auditLogs.workflow where workflows.completeTS &gt;= ? and workflows.completeTS &lt;= ?&#xD;
+           order by workflows.completeTS ASC ,workflows.id ASC , auditLogs.isEntry DESC</sql>
+          <headerFields>Workflow Name</headerFields>
+          <headerFields>Workflow Label</headerFields>
+          <headerFields>Request Reason</headerFields>
+          <headerFields>Workflow Started</headerFields>
+          <headerFields>Workflow Completed</headerFields>
+          <headerFields>First Name</headerFields>
+          <headerFields>Last Name</headerFields>
+          <headerFields>Email Address</headerFields>
+          <dataFields>Action</dataFields>
+          <dataFields>Target Type</dataFields>
+          <dataFields>Name</dataFields>
+          <dataFields>Value</dataFields>
+        </report>
       </reports>
     </provisioning>
     </tremoloConfig>
