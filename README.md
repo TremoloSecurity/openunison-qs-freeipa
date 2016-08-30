@@ -2,6 +2,7 @@
 
 This quickstart will deploy an OpenUnison integration with FreeIPA.  Once deployed,
 a user will be able to:
+
 1. Register
 2. Request access to groups managed by FreeIPA
 3. Update their own profile and upload an SSH key
