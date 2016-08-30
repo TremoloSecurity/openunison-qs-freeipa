@@ -656,6 +656,7 @@
                   <mapping  strict="true">
                     <map>
                       <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+                      <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="mail"/>
                     </map>
                     <onSuccess>
                       <addGroup name="$groupName$" remove="false"/>
@@ -675,6 +676,7 @@
                     <mapping  strict="true">
                       <map>
                         <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="uid"/>
+                        <mapping targetAttributeName="uid" sourceType="user" targetAttributeSource="mail"/>
                       </map>
                       <onSuccess>
                         <addGroup name="$groupName$" remove="true"/>
