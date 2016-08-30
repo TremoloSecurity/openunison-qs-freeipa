@@ -661,9 +661,9 @@
                     <onSuccess>
                       <addGroup name="$groupName$" remove="false"/>
                       <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="true" />
-                      <notifyUser subject="Your profile has been created" mailAttrib="mail">
+                      <notifyUser subject="Your access to $groupName$ has been granted" mailAttrib="mail">
                         <msg>
-                                      Your account has been created, you will receive an email to set your password.
+                                      Your access to $groupName$ has been granted
                                     </msg>
                         </notifyUser>
                         <customTask className="com.tremolosecurity.provisioning.customTasks.SetPassword">
@@ -681,9 +681,9 @@
                       <onSuccess>
                         <addGroup name="$groupName$" remove="true"/>
                         <provision sync="true" target="freeipa" setPassword="false" onlyPassedInAttributes="true" />
-                        <notifyUser subject="Your profile has been created" mailAttrib="mail">
+                        <notifyUser subject="Your access to $groupName$ has been removed" mailAttrib="mail">
                           <msg>
-                                        Your account has been created, you will receive an email to set your password.
+                                        Your access to $groupName$ has been removed
                                       </msg>
                           </notifyUser>
                           <customTask className="com.tremolosecurity.provisioning.customTasks.SetPassword">
