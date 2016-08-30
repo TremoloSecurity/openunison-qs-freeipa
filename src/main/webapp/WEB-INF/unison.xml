@@ -745,8 +745,45 @@
         </queueConfig>
         <portal>
         </portal>
-        <scheduler useDB="false" threadCount="3" instanceLabel="testing" instanceIPMask="127"/>
-        <listeners/>
+        <scheduler useDB="false" threadCount="3" instanceLabel="testing" instanceIPMask="127">
+          <job className="com.tremolosecurity.provisioning.scheduler.jobs.UpdateApprovalAz" name="resetAllowedApprovers" group="testing">
+            <!-- When to run the job -->
+            <cronSchedule
+                    seconds="0"
+                    minutes="0"
+                    hours="*"
+                    dayOfMonth="*"
+                    month="*"
+                    dayOfWeek="?"
+                    year="*"
+                    />
+            <!-- The name of the queue the Update Approvals Authorizations message listener is configured on      -->
+            <param name="queueName" value="rebaseQueue" />
+          </job>
+          <job className="com.tremolosecurity.provisioning.scheduler.jobs.RemindApprovers" name="remindAppovers" group="testing">
+            <!-- When to run the job -->
+                  <cronSchedule
+                          seconds="0"
+                          minutes="0"
+                          hours="9"
+                          dayOfMonth="*"
+                          month="*"
+                          dayOfWeek="?"
+                          year="*"
+                  />
+
+            <!-- The template for the message to send to the approvers. Use %L to represent the label of the workflow that is open and %D to represent the number of days open    -->
+            <param name="message" value="The request %L has been open for %D days, please login to act on this request" />
+            <!-- The number of days an approval request should be open before sending a reminder  -->
+            <param name="days" value="7" />
+            <!-- The name of the attribute that has the user's email address      -->
+            <param name="mailAttributeName" value="mail" />
+          </job>
+        </scheduler>
+        <listeners>
+          <!-- queueName - The name of the queue to listen to -->
+          <listener className="com.tremolosecurity.provisioning.listeners.UpdateApprovalAZListener" queueName="rebaseQueue"></listener>
+        </listeners>
         <reports>
           <report orgID="687da09f-8ec1-48ac-b035-f2f182b9bd1e" name="My Open Requests" description="List of your currently open requests and the approvers responsible for acting on them" groupBy="id" groupings="true">
             <paramater>currentUser</paramater>
