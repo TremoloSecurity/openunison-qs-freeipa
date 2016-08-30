@@ -35,6 +35,11 @@ should be added to the keystore.
 | SMTP_TLS | true/false if the SMTP server uses TLS | true |
 | OU_AUDITOR_GROUP | The name (cn) of a group in FreeIPA that provides access for auditors | system-auditors |
 | JAVA_OPTS | List of Java system properties, MUST include unisonKeystorePassword | -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom -DunisonKeystorePassword=start123 |
+| OU_JDBC_PWD_URL | The JDBC URL for the password reset database | jdbc:mysql://mariadb:3306/passwordReset?useSSL=true |
+| GOOGLE_CAPTCHA_SITE_KEY | Site Key from https://www.google.com/recaptcha |  XXXXXX |
+| GOOGLE_CAPTCHA_SECRET | Secret from google recaptcha | XXXXXX |
+| OU_SELF_REG_APPROVER_GROUP | The name (cn) of the group for approving user self registrations |
+
 
 ## Use
 
