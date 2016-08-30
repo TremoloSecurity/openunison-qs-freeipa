@@ -68,8 +68,8 @@
           <uri>/scale</uri>
           <proxyTo>https://cdn.rawgit.com/TremoloSecurity/OpenUnison/1.0.7/unison/unison-scalejs-main/src/main/html${trimmedURI}</proxyTo>
           <results>
-            <azSuccess>
-            </azSuccess>
+            <auFail>noauaz</auFail>
+            <azFail>noauaz</azFail>
           </results>
           <azRules>
             <rule scope="dn" constraint="o=Tremolo" />
@@ -145,8 +145,8 @@
           </filterChain>
           <uri>/scale/main</uri>
           <results>
-            <azSuccess>
-            </azSuccess>
+            <auFail>noauaz</auFail>
+            <azFail>noauaz</azFail>
           </results>
           <azRules>
             <rule scope="dn" constraint="o=Tremolo" />
@@ -163,8 +163,8 @@
           <uri>/scale-reset</uri>
           <proxyTo>https://cdn.rawgit.com/TremoloSecurity/OpenUnison/1.0.7/unison/unison-scalejs-password/src/main/html${trimmedURI}</proxyTo>
           <results>
-            <azSuccess>
-            </azSuccess>
+            <auFail>noauaz</auFail>
+            <azFail>noauaz</azFail>
           </results>
           <azRules>
             <rule scope="dn" constraint="o=Tremolo" />
@@ -207,8 +207,8 @@
           </filterChain>
           <uri>/scale-reset/password</uri>
           <results>
-            <azSuccess>
-            </azSuccess>
+            <auFail>noauaz</auFail>
+            <azFail>noauaz</azFail>
           </results>
           <azRules>
             <rule scope="dn" constraint="o=Tremolo" />
@@ -225,8 +225,8 @@
           <uri>/scale-register</uri>
           <proxyTo>https://cdn.rawgit.com/TremoloSecurity/OpenUnison/1.0.7/unison/unison-scalejs-register/src/main/html${trimmedURI}</proxyTo>
           <results>
-            <azSuccess>
-            </azSuccess>
+            <auFail>noauaz</auFail>
+            <azFail>noauaz</azFail>
           </results>
           <azRules>
             <rule scope="dn" constraint="o=Tremolo" />
@@ -315,8 +315,8 @@
           </filterChain>
           <uri>/scale-register/register</uri>
           <results>
-            <azSuccess>
-            </azSuccess>
+            <auFail>noauaz</auFail>
+            <azFail>noauaz</azFail>
           </results>
           <azRules>
             <rule scope="dn" constraint="o=Tremolo" />
@@ -458,7 +458,7 @@
         <required>required</required>
         <params>
           <!-- Path to the login form -->
-          <param name="FORMLOGIN_JSP" value="/auth/forms/defaultForm.jsp"/>
+          <param name="FORMLOGIN_JSP" value="/auth/forms/login.jsp"/>
           <!-- Either an attribute name OR an ldap filter mapping the form parameters. If this is an ldap filter, form parameters are identified by ${parameter} -->
           <param name="uidAttr" value="uid"/>
           <!-- If true, the user is determined based on an LDAP filter rather than a simple user lookup -->
